@@ -272,56 +272,60 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 var Loader = function () {
 
   /**
-   * initialise method, assigns empty layer array and
-   * remaps window.init method to override animate CC
-   * callback with our own.
+   * constructor method, assigned empty layers array and remaps
+   * window.init method for chaning to animate CC initiation
    *
    * @return {void} void
    */
 
   function Loader() {
-    var _this = this;
-
     _classCallCheck(this, Loader);
 
     // Set empty layers array
     this.layers = [];
 
     // Extend window.init method as defined by animate CC
-    var init = window.init;
-    window.init = function () {
-      // Invoke animate CC init method
-      init();
-
-      // Set stage local to this instance
-      _this.stage = stage;
-
-      // Bind stage click events
-      _this.bindEvents();
-
-      // Load config to import users template data
-      if (window.pmAnimatedBannersConfig) pmAnimatedBannersConfig(_this);
-    };
+    this._init = window.init;
+    window.init = this.init.bind(this);
   }
 
   /**
-   * Event binding method, binds click events to stage to identify which
-   * child layer has been clicked.
+   * initialise method, chain for animate CC initialise method
    *
-   * @return {Void} void
+   * @return {void} void
    */
 
 
   _createClass(Loader, [{
+    key: 'init',
+    value: function init() {
+      // Invoke animate CC init method
+      this._init();
+
+      // Bind stage click events
+      this.bindEvents();
+
+      // Load config to import users template data
+      if (window.pmAnimatedBannersConfig) pmAnimatedBannersConfig(this);
+    }
+
+    /**
+     * Event binding method, binds click events to stage to identify which
+     * child layer has been clicked.
+     *
+     * @return {Void} void
+     */
+
+  }, {
     key: 'bindEvents',
     value: function bindEvents() {
-      var _this2 = this;
+      var _this = this;
 
       // Track stage click events
-      this.stage.on('click', function (e) {
+      stage.on('click', function (e) {
         // Calculate which child layers of loader were clicked
-        var clickedLayers = _this2.layers.filter(function (layer) {
-          return _this2.stage.getObjectsUnderPoint(e.stageX, e.stageY, 0).indexOf(layer.shape) > -1;
+        var clickedLayers = _this.layers.filter(function (layer) {
+          return stage.getObjectsUnderPoint(e.stageX, e.stageY, 0).indexOf(layer.shape) > -1;
         });
 
         // Fire the layers click method

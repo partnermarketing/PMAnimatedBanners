@@ -10,6 +10,13 @@ module.exports = function(config) {
       'tests/unit/**/*.js'
     ],
 
+    client: {
+      captureConsole: true,
+      mocha: {
+        bail: true
+      }
+    },
+
     exclude: [],
 
     singleRun: true,

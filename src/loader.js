@@ -6,9 +6,8 @@ import Layer from './layer';
 export default class Loader {
 
   /**
-   * initialise method, assigns empty layer array and
-   * remaps window.init method to override animate CC
-   * callback with our own.
+   * constructor method, assigned empty layers array and remaps
+   * window.init method for chaning to animate CC initiation
    *
    * @return {void} void
    */
@@ -17,20 +16,24 @@ export default class Loader {
     this.layers = [];
 
     // Extend window.init method as defined by animate CC
-    const init = window.init;
-    window.init = () => {
-      // Invoke animate CC init method
-      init();
+    this._init = window.init;
+    window.init = this.init.bind(this);
+  }
 
-      // Set stage local to this instance
-      this.stage = stage;
+  /**
+   * initialise method, chain for animate CC initialise method
+   *
+   * @return {void} void
+   */
+  init() {
+    // Invoke animate CC init method
+    this._init();
 
-      // Bind stage click events
-      this.bindEvents();
+    // Bind stage click events
+    this.bindEvents();
 
-      // Load config to import users template data
-      if (window.pmAnimatedBannersConfig) pmAnimatedBannersConfig(this);
-    };
+    // Load config to import users template data
+    if (window.pmAnimatedBannersConfig) pmAnimatedBannersConfig(this);
   }
 
   /**
@@ -41,10 +44,10 @@ export default class Loader {
    */
   bindEvents() {
     // Track stage click events
-    this.stage.on('click', (e) => {
+    stage.on('click', (e) => {
       // Calculate which child layers of loader were clicked
       const clickedLayers = this.layers.filter(
-        layer => this.stage.getObjectsUnderPoint(e.stageX, e.stageY, 0).indexOf(layer.shape) > -1
+        layer => stage.getObjectsUnderPoint(e.stageX, e.stageY, 0).indexOf(layer.shape) > -1
       );
 
       // Fire the layers click method
