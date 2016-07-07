@@ -38,6 +38,11 @@ Include `dist/pmAnimatedBanners.min.js` above the closing `</body>` tag of the t
       }
     });
 
+    conf.map({
+      reference: 'stage',
+      link: 'http://www.partnermarketing.com'
+    });
+
   };
 ```
 
@@ -49,6 +54,8 @@ When using this API references must first be defined inside animate CC before us
 #### reference
 
 Type: `string`
+
+Options: 'stage', the animate cc reference example: 'myIntro', 'myLogo'
 
 Default: `null`
 

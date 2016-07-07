@@ -198,7 +198,7 @@ var Layer = function () {
     key: 'clicked',
     value: function clicked() {
       // Send click event tracking to api
-      if (sendCampaignInstanceTrackingEvent) sendCampaignInstanceTrackingEvent('animatedBannerClick');
+      if (window.sendCampaignInstanceTrackingEvent) sendCampaignInstanceTrackingEvent('animatedBannerClick');
 
       // If callback fire it
       if (this.data.onClick) this.data.onClick.apply(this, this.data);
@@ -348,7 +348,11 @@ var Loader = function () {
     value: function map(data) {
       // Get createjs shape from designer reference
       var shape = stage.children[data.reference] || stage.children[0][data.reference];
-      if (shape) {
+      if (data.reference === 'stage') {
+        // Create new layer for entire stage
+        var stageLayer = new _layer2.default(data, stage);
+        stage.on('click', stageLayer.clicked.bind(stageLayer));
+      } else if (shape) {
         // Create new layer
         this.layers.push(new _layer2.default(data, shape));
       }

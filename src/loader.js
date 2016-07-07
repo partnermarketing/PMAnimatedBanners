@@ -65,7 +65,11 @@ export default class Loader {
   map(data) {
     // Get createjs shape from designer reference
     const shape = stage.children[data.reference] || stage.children[0][data.reference];
-    if (shape) {
+    if (data.reference === 'stage') {
+      // Create new layer for entire stage
+      const stageLayer = new Layer(data, stage);
+      stage.on('click', stageLayer.clicked.bind(stageLayer));
+    } else if (shape) {
       // Create new layer
       this.layers.push(new Layer(data, shape));
     }
