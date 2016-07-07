@@ -1,7 +1,8 @@
 // Build tools
 const gulp = require('gulp'),
 	uglify = require('gulp-uglify'),
-	babel = require('gulp-babel');
+	babel = require('gulp-babel')
+  rename = require('gulp-rename');
 
 // Compilers
 const browserify = require('browserify'),
@@ -21,8 +22,10 @@ gulp.task('js', function() {
 		.bundle()
 		.pipe(source('pmAnimatedBanners.js'))
 		.pipe(buffer())
-		.pipe(uglify())
-		.pipe(gulp.dest('./dist'));
+		.pipe(gulp.dest('./dist'))
+    .pipe(uglify())
+    .pipe(rename({ extname: '.min.js' }))
+    .pipe(gulp.dest('./dist'));
 });
 
 gulp.task('watch', function() {

@@ -1,1 +1,272 @@
-!function e(t,n,r){function i(o,u){if(!n[o]){if(!t[o]){var f="function"==typeof require&&require;if(!u&&f)return f(o,!0);if(a)return a(o,!0);var c=new Error("Cannot find module '"+o+"'");throw c.code="MODULE_NOT_FOUND",c}var d=n[o]={exports:{}};t[o][0].call(d.exports,function(e){var n=t[o][1][e];return i(n?n:e)},d,d.exports,e,t,n,r)}return n[o].exports}for(var a="function"==typeof require&&require,o=0;o<r.length;o++)i(r[o]);return i}({1:[function(e,t,n){"use strict";Object.defineProperty(n,"__esModule",{value:!0});var r={image:function i(e,t){var i=new Image;i.src=t.image,i.onload=function(n){var r=i.width,a=i.height,o=e.getBounds()?e.getBounds().width:e.nominalBounds.width,u=e.getBounds()?e.getBounds().height:e.nominalBounds.height,f=r>a?100/r*o/100:100/a*u/100,c=e.addChild(new createjs.Bitmap(n.target)),d=0,s=0;t.horizontalAlign,c.setTransform(d,s,f,f),stage.update()}},text:function(e,t){e.text=t.text,stage.update()}};n["default"]=r},{}],2:[function(e,t,n){"use strict";function r(e){return e&&e.__esModule?e:{"default":e}}var i=e("./loader"),a=r(i);new a["default"](stage)},{"./loader":3}],3:[function(e,t,n){"use strict";function r(e){return e&&e.__esModule?e:{"default":e}}function i(e,t){if(!(e instanceof t))throw new TypeError("Cannot call a class as a function")}Object.defineProperty(n,"__esModule",{value:!0});var a=function(){function e(e,t){for(var n=0;n<t.length;n++){var r=t[n];r.enumerable=r.enumerable||!1,r.configurable=!0,"value"in r&&(r.writable=!0),Object.defineProperty(e,r.key,r)}}return function(t,n,r){return n&&e(t.prototype,n),r&&e(t,r),t}}(),o=e("./helpers/map"),u=r(o),f=function(){function e(t){var n=this;i(this,e),this.stage=t;var r=window.init;window.init=function(){r(),window.pmAnimatedBannersConfig&&pmAnimatedBannersConfig(n)}}return a(e,[{key:"map",value:function(e){stage.children[0][e.reference]&&(e.image?u["default"].image(stage.children[0][e.reference],e):e.text&&u["default"].text(stage.children[0][e.reference],e))}}]),e}();n["default"]=f},{"./helpers/map":1}]},{},[2]);
+(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+'use strict';
+
+var _loader = require('./loader');
+
+var _loader2 = _interopRequireDefault(_loader);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+new _loader2.default();
+
+},{"./loader":3}],2:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+/**
+ * Layer class, instantiate layers with custom data to render new images/text/links
+ * to the canvas. Will work with animate CC object references.
+ */
+
+var Layer = function () {
+
+  /**
+   * initialise method, assigns properties to layer instance
+   * and starts calculation and rendering of layer
+   * 
+   * @param  {Object} data  [the layers data such as shape reference, image/text/link, alignment]
+   * @param  {Object} shape [the createjs shape instantiated via animate CC lib]
+   * @return {void} void
+   */
+
+  function Layer(data, shape) {
+    var _this = this;
+
+    _classCallCheck(this, Layer);
+
+    // Set layer values
+    data = Object.assign(this._defaultData, data);
+    Object.assign(this, { shape: shape, data: data });
+
+    // Calculate dimensions, position and render
+    this.calculate().then(function () {
+      return _this.render();
+    });
+  }
+
+  /**
+   * calculation method used to asyncronously fetch container and layer
+   * dimensions and positions.
+   * 
+   * @return {Promise} [will resolve once layer size and position has been set]
+   */
+
+
+  _createClass(Layer, [{
+    key: 'calculate',
+    value: function calculate() {
+      var _this2 = this;
+
+      // Create and return promise
+      return new Promise(function (resolve) {
+
+        // If layer is using an image, fetch src and calculate position and size
+        if (_this2.data.image) {
+          _this2.calculateSize().then(function () {
+            return _this2.calculatePos().then(resolve);
+          });
+
+          // If layer is using text or link no need to calculate position or size
+        } else {
+          resolve();
+        }
+      });
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      if (this.data.image) {
+        var bitmap = this.shape.addChild(new createjs.Bitmap(this.imageEl));
+        bitmap.setTransform(this.data.pos.x, this.data.pos.y, this.data.scale, this.data.scale);
+        stage.update();
+      } else if (this.data.text) {
+        this.shape.text = this.data.text;
+        stage.update();
+      }
+    }
+
+    /**
+     * Size calculation method, will load an images src and fetch the container and images
+     * natrual dimensions, these will be saved to this.data._orig and this.data._container
+     * 
+     * @return {Promise} [will resolve once image src has been retrieved and dimensions calculated]
+     */
+
+  }, {
+    key: 'calculateSize',
+    value: function calculateSize() {
+      var _this3 = this;
+
+      // Create image element
+      this.imageEl = new Image();
+      this.imageEl.src = this.data.image;
+
+      // Create and return promise
+      return new Promise(function (resolve) {
+
+        // Load image
+        _this3.imageEl.onload = function (e) {
+
+          // Calculate image dimensions
+          var width = _this3.data._orig.width = _this3.imageEl.width;
+          var height = _this3.data._orig.height = _this3.imageEl.height;
+
+          // Calculate container dimensions
+          var cWidth = _this3.data._container.width = _this3.shape.getBounds() ? _this3.shape.getBounds().width : _this3.shape.nominalBounds.width;
+          var cHeight = _this3.data._container.height = _this3.shape.getBounds() ? _this3.shape.getBounds().height : _this3.shape.nominalBounds.height;
+
+          // Calculate scale
+          var scale = _this3.data.scale = width > height ? 100 / width * cWidth / 100 : 100 / height * cHeight / 100;
+
+          // Calculate new image dimensions
+          _this3.data.width = width * scale;
+          _this3.data.height = height * scale;
+
+          resolve(scale);
+        };
+      });
+    }
+
+    /**
+     * Position calculation method, will determine the x and y pos relative to the createjs container,
+     * this method will depend on this.data.align properties to determine the x and y pos
+     * 
+     * @return {Promise} [will resolve once position has been calculated]
+     */
+
+  }, {
+    key: 'calculatePos',
+    value: function calculatePos() {
+      var _this4 = this;
+
+      return new Promise(function (resolve) {
+        _this4.data.pos.x = _this4.data.align.x === 'center' ? (_this4.data._container.width - _this4.data.width) / 2 : _this4.data.align.x === 'right' ? _this4.data._container.width - _this4.data.width : 0;
+        _this4.data.pos.y = _this4.data.align.y === 'center' ? (_this4.data._container.height - _this4.data.height) / 2 : _this4.data.align.y === 'bottom' ? _this4.data._container.height - _this4.data.height : 0;
+        resolve();
+      });
+    }
+  }, {
+    key: 'clicked',
+    value: function clicked() {
+
+      // TODO: Do some testing on the link first, ensure its valid
+      if (this.data.link) {
+        window.location = this.data.link;
+      }
+
+      if (this.data.onClick) {
+        this.data.onClick.apply(this, this.data);
+      }
+    }
+
+    /**
+     * Default data values, will be merged with this.data
+     * 
+     * @type {Object}
+     */
+
+  }, {
+    key: '_defaultData',
+    get: function get() {
+      return {
+        align: {
+          x: 'center',
+          y: 'center'
+        },
+        _orig: {
+          width: 0,
+          height: 0
+        },
+        _container: {
+          width: 0,
+          height: 0
+        },
+        scale: 1,
+        width: 0,
+        height: 0,
+        pos: {
+          x: 0,
+          y: 0
+        }
+      };
+    }
+  }]);
+
+  return Layer;
+}();
+
+exports.default = Layer;
+;
+
+},{}],3:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _layer = require('./layer');
+
+var _layer2 = _interopRequireDefault(_layer);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Loader = function () {
+  function Loader() {
+    var _this = this;
+
+    _classCallCheck(this, Loader);
+
+    this.layers = [];
+
+    var init = window.init;
+    window.init = function () {
+      init();
+      _this.stage = stage;
+      _this.bindEvents();
+      if (window.pmAnimatedBannersConfig) pmAnimatedBannersConfig(_this);
+    };
+  }
+
+  _createClass(Loader, [{
+    key: 'bindEvents',
+    value: function bindEvents() {
+      var _this2 = this;
+
+      this.stage.on('click', function (e) {
+        var clickedLayers = _this2.layers.filter(function (layer) {
+          return _this2.stage.getObjectsUnderPoint(e.stageX, e.stageY, 0).indexOf(layer.shape) > -1;
+        });
+        clickedLayers.forEach(function (layer) {
+          return layer.clicked();
+        });
+      });
+    }
+  }, {
+    key: 'map',
+    value: function map(data) {
+
+      var shape = stage.children[data.reference] || stage.children[0][data.reference];
+      if (shape) {
+        this.layers.push(new _layer2.default(data, shape));
+      }
+    }
+  }]);
+
+  return Loader;
+}();
+
+exports.default = Loader;
+
+},{"./layer":2}]},{},[1]);
