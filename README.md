@@ -1,5 +1,6 @@
 # pm-animated-banners
 [![Build Status](https://travis-ci.org/partnermarketing/pm-animated-banners.svg?branch=master)](https://travis-ci.org/partnermarketing/pm-animated-banners)
+[![Coverage Status](https://coveralls.io/repos/github/partnermarketing/pm-animated-banners/badge.svg?branch=master)](https://coveralls.io/github/partnermarketing/pm-animated-banners?branch=master)
 
 Partnermarketing front-end API for mapping user data to animate CC html5 banners. Currently only supports animate CC insertion but will eventually support native canvas insertion.
 
