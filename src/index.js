@@ -1,4 +1,7 @@
-import loader from './loader';
+import Loader from './loader';
 
 // Init api
-new loader();
+(() => {
+  // eslint-disable-next-line no-unused-vars
+  const loader = new Loader();
+})();

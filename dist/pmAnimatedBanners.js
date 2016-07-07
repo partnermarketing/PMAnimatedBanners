@@ -8,7 +8,10 @@ var _loader2 = _interopRequireDefault(_loader);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 // Init api
-new _loader2.default();
+(function () {
+  // eslint-disable-next-line no-unused-vars
+  var loader = new _loader2.default();
+})();
 
 },{"./loader":3}],2:[function(require,module,exports){
 'use strict';
@@ -31,7 +34,7 @@ var Layer = function () {
   /**
    * initialise method, assigns properties to layer instance
    * and starts calculation and rendering of layer
-   * 
+   *
    * @param  {Object} data  [the layers data such as shape reference, image/text/link, alignment]
    * @param  {Object} shape [the createjs shape instantiated via animate CC lib]
    * @return {void} void
@@ -55,7 +58,7 @@ var Layer = function () {
   /**
    * calculation method used to asyncronously fetch container and layer
    * dimensions and positions.
-   * 
+   *
    * @return {Promise} [will resolve once layer size and position has been set]
    */
 
@@ -84,7 +87,7 @@ var Layer = function () {
     /**
      * render method to load data onto the canvas, will handle different data types to 
      * determine which way to render the layer.
-     * 
+     *
      * @return {Void} void
      */
 
@@ -115,7 +118,7 @@ var Layer = function () {
     /**
      * Size calculation method, will load an images src and fetch the container and images
      * natrual dimensions, these will be saved to this.data._orig and this.data._container
-     * 
+     *
      * @return {Promise} [will resolve once image src has been retrieved and dimensions calculated]
      */
 
@@ -157,7 +160,7 @@ var Layer = function () {
     /**
      * Position calculation method, will determine the x and y pos relative to the createjs container,
      * this method will depend on this.data.align properties to determine the x and y pos
-     * 
+     *
      * @return {Promise} [will resolve once position has been calculated]
      */
 
@@ -178,7 +181,7 @@ var Layer = function () {
 
     /**
      * method to be fired when this layer in clicked in the canvas
-     * 
+     *
      * @return {void} [void]
      */
 
@@ -199,7 +202,7 @@ var Layer = function () {
 
     /**
      * Default data values, will be merged with this.data
-     * 
+     *
      * @type {Object}
      */
 

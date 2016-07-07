@@ -1,0 +1,16 @@
+{
+  "extends": [
+  	"airbnb"
+  ],
+  "env": {
+    "browser": 1
+  },
+  "globals": {
+    "pmAnimatedBannersConfig": true,
+    "createjs": true,
+    "stage": true
+  },
+  "rules": {
+    "no-underscore-dangle": 0
+  }
+}
