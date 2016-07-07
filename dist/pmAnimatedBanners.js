@@ -1,17 +1,17 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 'use strict';
 
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
 var _loader = require('./loader');
 
 var _loader2 = _interopRequireDefault(_loader);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-// Init api
-(function () {
-  // eslint-disable-next-line no-unused-vars
-  var loader = new _loader2.default();
-})();
+exports.default = new _loader2.default();
 
 },{"./loader":3}],2:[function(require,module,exports){
 'use strict';
@@ -40,13 +40,13 @@ var Layer = function () {
    * @return {void} void
    */
 
-  function Layer(data, shape) {
+  function Layer(_data, shape) {
     var _this = this;
 
     _classCallCheck(this, Layer);
 
     // Set layer values
-    data = Object.assign(this._defaultData, data);
+    var data = Object.assign(this._defaultData, _data);
     Object.assign(this, { shape: shape, data: data });
 
     // Calculate dimensions, position and render
@@ -70,7 +70,6 @@ var Layer = function () {
 
       // Create and return promise
       return new Promise(function (resolve) {
-
         // If layer is using an image, fetch src and calculate position and size
         if (_this2.data.image) {
           _this2.calculateSize().then(function () {
@@ -85,7 +84,7 @@ var Layer = function () {
     }
 
     /**
-     * render method to load data onto the canvas, will handle different data types to 
+     * render method to load data onto the canvas, will handle different data types to
      * determine which way to render the layer.
      *
      * @return {Void} void
@@ -94,10 +93,8 @@ var Layer = function () {
   }, {
     key: 'render',
     value: function render() {
-
       // If rendering an image
       if (this.data.image) {
-
         // Create bitmap via createjs api
         var bitmap = this.shape.addChild(new createjs.Bitmap(this.imageEl));
 
@@ -106,7 +103,6 @@ var Layer = function () {
 
         // If rendering text
       } else if (this.data.text) {
-
         // Set shapes text data
         this.shape.text = this.data.text;
       }
@@ -133,17 +129,17 @@ var Layer = function () {
 
       // Create and return promise
       return new Promise(function (resolve) {
-
         // Load image
-        _this3.imageEl.onload = function (e) {
-
+        _this3.imageEl.onload = function () {
           // Calculate image dimensions
           var width = _this3.data._orig.width = _this3.imageEl.width;
           var height = _this3.data._orig.height = _this3.imageEl.height;
 
           // Calculate container dimensions
-          var cWidth = _this3.data._container.width = _this3.shape.getBounds() ? _this3.shape.getBounds().width : _this3.shape.nominalBounds.width;
-          var cHeight = _this3.data._container.height = _this3.shape.getBounds() ? _this3.shape.getBounds().height : _this3.shape.nominalBounds.height;
+          var bounds = _this3.shape.getBounds();
+          var container = _this3.data._container;
+          var cWidth = container.width = bounds ? bounds.width : _this3.shape.nominalBounds.width;
+          var cHeight = container.height = bounds ? bounds.height : _this3.shape.nominalBounds.height;
 
           // Calculate scale
           var scale = _this3.data.scale = width > height ? 100 / width * cWidth / 100 : 100 / height * cHeight / 100;
@@ -170,10 +166,23 @@ var Layer = function () {
       var _this4 = this;
 
       return new Promise(function (resolve) {
+        // Determine X position relative to container based on alignment rules
+        if (_this4.data.align.x === 'center') {
+          _this4.data.pos.x = (_this4.data._container.width - _this4.data.width) / 2;
+        } else if (_this4.data.align.x === 'right') {
+          _this4.data.pos.x = _this4.data._container.width - _this4.data.width;
+        } else {
+          _this4.data.pos.x = 0;
+        }
 
-        // Determine position relative to container based on alignment rules
-        _this4.data.pos.x = _this4.data.align.x === 'center' ? (_this4.data._container.width - _this4.data.width) / 2 : _this4.data.align.x === 'right' ? _this4.data._container.width - _this4.data.width : 0;
-        _this4.data.pos.y = _this4.data.align.y === 'center' ? (_this4.data._container.height - _this4.data.height) / 2 : _this4.data.align.y === 'bottom' ? _this4.data._container.height - _this4.data.height : 0;
+        // Determine Y position relative to container based on alignment rules
+        if (_this4.data.align.y === 'center') {
+          _this4.data.pos.y = (_this4.data._container.height - _this4.data.height) / 2;
+        } else if (_this4.data.align.y === 'bottom') {
+          _this4.data.pos.y = _this4.data._container.height - _this4.data.height;
+        } else {
+          _this4.data.pos.y = 0;
+        }
 
         resolve();
       });
@@ -188,13 +197,14 @@ var Layer = function () {
   }, {
     key: 'clicked',
     value: function clicked() {
+      // Send click event tracking to api
+      if (sendCampaignInstanceTrackingEvent) sendCampaignInstanceTrackingEvent('animatedBannerView');
 
       // If callback fire it
       if (this.data.onClick) this.data.onClick.apply(this, this.data);
 
       // If link is defined change location
       if (this.data.link) {
-
         // TODO: Do some testing on the link first, ensure its valid
         window.location = this.data.link;
       }
@@ -237,7 +247,6 @@ var Layer = function () {
 }();
 
 exports.default = Layer;
-;
 
 },{}],3:[function(require,module,exports){
 'use strict';
@@ -266,7 +275,7 @@ var Loader = function () {
    * initialise method, assigns empty layer array and
    * remaps window.init method to override animate CC
    * callback with our own.
-   * 
+   *
    * @return {void} void
    */
 
@@ -281,7 +290,6 @@ var Loader = function () {
     // Extend window.init method as defined by animate CC
     var init = window.init;
     window.init = function () {
-
       // Invoke animate CC init method
       init();
 
@@ -299,7 +307,7 @@ var Loader = function () {
   /**
    * Event binding method, binds click events to stage to identify which
    * child layer has been clicked.
-   * 
+   *
    * @return {Void} void
    */
 
@@ -311,7 +319,6 @@ var Loader = function () {
 
       // Track stage click events
       this.stage.on('click', function (e) {
-
         // Calculate which child layers of loader were clicked
         var clickedLayers = _this2.layers.filter(function (layer) {
           return _this2.stage.getObjectsUnderPoint(e.stageX, e.stageY, 0).indexOf(layer.shape) > -1;
@@ -327,7 +334,7 @@ var Loader = function () {
     /**
      * Data mapping method, main API method to be used by designer when customising
      * an animated banner. Will map data into layers and render them to canvas
-     * 
+     *
      * @param  {Object} data [the designers data rules as defined in the config]
      * @return {Void} void
      */
@@ -335,11 +342,9 @@ var Loader = function () {
   }, {
     key: 'map',
     value: function map(data) {
-
       // Get createjs shape from designer reference
       var shape = stage.children[data.reference] || stage.children[0][data.reference];
       if (shape) {
-
         // Create new layer
         this.layers.push(new _layer2.default(data, shape));
       }
