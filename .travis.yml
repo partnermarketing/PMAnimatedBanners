@@ -1,0 +1,10 @@
+language: node_js
+node_js:
+  - "5.2"
+
+before_install:
+  - npm install
+  - gulp dist
+  
+# Run tests.
+script: npm test

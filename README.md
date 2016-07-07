@@ -1,4 +1,5 @@
 # pm-animated-banners
+[![Build Status](https://travis-ci.org/partnermarketing/pm-animated-banners.svg?branch=master)](https://travis-ci.org/partnermarketing/pm-animated-banners)
 
 Partnermarketing front-end API for mapping user data to animate CC html5 banners. Currently only supports animate CC insertion but will eventually support native canvas insertion.
 
