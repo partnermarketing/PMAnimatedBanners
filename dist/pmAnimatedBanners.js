@@ -198,7 +198,7 @@ var Layer = function () {
     key: 'clicked',
     value: function clicked() {
       // Send click event tracking to api
-      if (sendCampaignInstanceTrackingEvent) sendCampaignInstanceTrackingEvent('animatedBannerView');
+      if (sendCampaignInstanceTrackingEvent) sendCampaignInstanceTrackingEvent('animatedBannerClick');
 
       // If callback fire it
       if (this.data.onClick) this.data.onClick.apply(this, this.data);
