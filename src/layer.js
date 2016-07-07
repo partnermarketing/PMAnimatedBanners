@@ -46,15 +46,33 @@ export default class Layer {
     });   
   }
 
+  /**
+   * render method to load data onto the canvas, will handle different data types to 
+   * determine which way to render the layer.
+   * 
+   * @return {Void} void
+   */
   render() {
+
+    // If rendering an image
     if(this.data.image) {
+
+      // Create bitmap via createjs api
       var bitmap = this.shape.addChild(new createjs.Bitmap(this.imageEl));
+
+      // Transform image for scale and position
       bitmap.setTransform(this.data.pos.x, this.data.pos.y, this.data.scale, this.data.scale);
-      stage.update();
+
+    // If rendering text
     } else if(this.data.text) {
+
+      // Set shapes text data
       this.shape.text = this.data.text;
-      stage.update();
+
     }
+
+    // Update canvas
+    stage.update();
 
   }
 
@@ -108,23 +126,35 @@ export default class Layer {
   calculatePos() {
 
     return new Promise(resolve => {
+
+      // Determine position relative to container based on alignment rules
       this.data.pos.x = this.data.align.x === 'center' ? (this.data._container.width - this.data.width) / 2 : (this.data.align.x === 'right' ? this.data._container.width - this.data.width : 0);
       this.data.pos.y = this.data.align.y === 'center' ? (this.data._container.height - this.data.height) / 2 : (this.data.align.y === 'bottom' ? this.data._container.height - this.data.height : 0);
+      
       resolve();
+
     });
 
   }
 
+  /**
+   * method to be fired when this layer in clicked in the canvas
+   * 
+   * @return {void} [void]
+   */
   clicked() {
 
-    // TODO: Do some testing on the link first, ensure its valid
+    // If callback fire it
+    if(this.data.onClick) this.data.onClick.apply(this, this.data);
+
+    // If link is defined change location
     if(this.data.link) {
+
+      // TODO: Do some testing on the link first, ensure its valid
       window.location = this.data.link;
+
     }
 
-    if(this.data.onClick) {
-      this.data.onClick.apply(this, this.data);
-    }
   }
 
   /**
@@ -138,6 +168,13 @@ export default class Layer {
         x: 'center',
         y: 'center'
       },
+      scale: 1,
+      width: 0,
+      height: 0,
+      pos: {
+        x: 0,
+        y: 0
+      },
       _orig: {
         width: 0,
         height: 0
@@ -146,13 +183,6 @@ export default class Layer {
         width: 0,
         height: 0
       },
-      scale: 1,
-      width: 0,
-      height: 0,
-      pos: {
-        x: 0,
-        y: 0
-      }
     }
   }
 

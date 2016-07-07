@@ -7,6 +7,7 @@ var _loader2 = _interopRequireDefault(_loader);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+// Init api
 new _loader2.default();
 
 },{"./loader":3}],2:[function(require,module,exports){
@@ -79,17 +80,36 @@ var Layer = function () {
         }
       });
     }
+
+    /**
+     * render method to load data onto the canvas, will handle different data types to 
+     * determine which way to render the layer.
+     * 
+     * @return {Void} void
+     */
+
   }, {
     key: 'render',
     value: function render() {
+
+      // If rendering an image
       if (this.data.image) {
+
+        // Create bitmap via createjs api
         var bitmap = this.shape.addChild(new createjs.Bitmap(this.imageEl));
+
+        // Transform image for scale and position
         bitmap.setTransform(this.data.pos.x, this.data.pos.y, this.data.scale, this.data.scale);
-        stage.update();
+
+        // If rendering text
       } else if (this.data.text) {
+
+        // Set shapes text data
         this.shape.text = this.data.text;
-        stage.update();
       }
+
+      // Update canvas
+      stage.update();
     }
 
     /**
@@ -147,22 +167,33 @@ var Layer = function () {
       var _this4 = this;
 
       return new Promise(function (resolve) {
+
+        // Determine position relative to container based on alignment rules
         _this4.data.pos.x = _this4.data.align.x === 'center' ? (_this4.data._container.width - _this4.data.width) / 2 : _this4.data.align.x === 'right' ? _this4.data._container.width - _this4.data.width : 0;
         _this4.data.pos.y = _this4.data.align.y === 'center' ? (_this4.data._container.height - _this4.data.height) / 2 : _this4.data.align.y === 'bottom' ? _this4.data._container.height - _this4.data.height : 0;
+
         resolve();
       });
     }
+
+    /**
+     * method to be fired when this layer in clicked in the canvas
+     * 
+     * @return {void} [void]
+     */
+
   }, {
     key: 'clicked',
     value: function clicked() {
 
-      // TODO: Do some testing on the link first, ensure its valid
-      if (this.data.link) {
-        window.location = this.data.link;
-      }
+      // If callback fire it
+      if (this.data.onClick) this.data.onClick.apply(this, this.data);
 
-      if (this.data.onClick) {
-        this.data.onClick.apply(this, this.data);
+      // If link is defined change location
+      if (this.data.link) {
+
+        // TODO: Do some testing on the link first, ensure its valid
+        window.location = this.data.link;
       }
     }
 
@@ -180,6 +211,13 @@ var Layer = function () {
           x: 'center',
           y: 'center'
         },
+        scale: 1,
+        width: 0,
+        height: 0,
+        pos: {
+          x: 0,
+          y: 0
+        },
         _orig: {
           width: 0,
           height: 0
@@ -187,13 +225,6 @@ var Layer = function () {
         _container: {
           width: 0,
           height: 0
-        },
-        scale: 1,
-        width: 0,
-        height: 0,
-        pos: {
-          x: 0,
-          y: 0
         }
       };
     }
@@ -222,43 +253,91 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+/**
+ * Loader class, entry point to the API
+ */
+
 var Loader = function () {
+
+  /**
+   * initialise method, assigns empty layer array and
+   * remaps window.init method to override animate CC
+   * callback with our own.
+   * 
+   * @return {void} void
+   */
+
   function Loader() {
     var _this = this;
 
     _classCallCheck(this, Loader);
 
+    // Set empty layers array
     this.layers = [];
 
+    // Extend window.init method as defined by animate CC
     var init = window.init;
     window.init = function () {
+
+      // Invoke animate CC init method
       init();
+
+      // Set stage local to this instance
       _this.stage = stage;
+
+      // Bind stage click events
       _this.bindEvents();
+
+      // Load config to import users template data
       if (window.pmAnimatedBannersConfig) pmAnimatedBannersConfig(_this);
     };
   }
+
+  /**
+   * Event binding method, binds click events to stage to identify which
+   * child layer has been clicked.
+   * 
+   * @return {Void} void
+   */
+
 
   _createClass(Loader, [{
     key: 'bindEvents',
     value: function bindEvents() {
       var _this2 = this;
 
+      // Track stage click events
       this.stage.on('click', function (e) {
+
+        // Calculate which child layers of loader were clicked
         var clickedLayers = _this2.layers.filter(function (layer) {
           return _this2.stage.getObjectsUnderPoint(e.stageX, e.stageY, 0).indexOf(layer.shape) > -1;
         });
+
+        // Fire the layers click method
         clickedLayers.forEach(function (layer) {
           return layer.clicked();
         });
       });
     }
+
+    /**
+     * Data mapping method, main API method to be used by designer when customising
+     * an animated banner. Will map data into layers and render them to canvas
+     * 
+     * @param  {Object} data [the designers data rules as defined in the config]
+     * @return {Void} void
+     */
+
   }, {
     key: 'map',
     value: function map(data) {
 
+      // Get createjs shape from designer reference
       var shape = stage.children[data.reference] || stage.children[0][data.reference];
       if (shape) {
+
+        // Create new layer
         this.layers.push(new _layer2.default(data, shape));
       }
     }
