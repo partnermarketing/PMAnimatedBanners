@@ -6,6 +6,10 @@ Partnermarketing front-end API for mapping user data to animate CC html5 banners
 npm install pm-animated-banners
 ```
 
+## Running the tests
+
+To run eslint and unit tests use the command `npm test`
+
 ## Usage
 
 Include `dist/pmAnimatedBanners.min.js` above the closing `</body>` tag of the template. Custom properties are to be defined independently from the lib using the `window.pmAnimatedBannersConfig` method. Add the following JavaScript to the template to start customisation.

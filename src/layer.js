@@ -140,6 +140,9 @@ export default class Layer {
    * @return {void} [void]
    */
   clicked() {
+    // Send click event tracking to api
+    if (sendCampaignInstanceTrackingEvent) sendCampaignInstanceTrackingEvent('animatedBannerView');
+
     // If callback fire it
     if (this.data.onClick) this.data.onClick.apply(this, this.data);
 
