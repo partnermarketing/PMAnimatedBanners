@@ -54,7 +54,7 @@ Type: `string`
 
 Default: `null`
 
-An image src to load into this container reference
+An image src to load into this container reference, when inserting images they will auto scale to fit the container references dimensions
 
 #### text
 
