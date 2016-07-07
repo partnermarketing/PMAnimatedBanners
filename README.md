@@ -55,11 +55,11 @@ When using this API references must first be defined inside animate CC before us
 
 Type: `string`
 
-Options: 'stage', the animate cc reference example: 'myIntro', 'myLogo'
+Options: `stage`, the animate cc reference example: `myIntro`, `myLogo`
 
 Default: `null`
 
-The shape reference in animate CC 
+The shapes reference in animate CC, if using `stage` this will target the entire animation
 
 #### image
 
