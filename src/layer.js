@@ -141,7 +141,9 @@ export default class Layer {
    */
   clicked() {
     // Send click event tracking to api
-    if (window.sendCampaignInstanceTrackingEvent) sendCampaignInstanceTrackingEvent('animatedBannerClick');
+    if (window.sendCampaignInstanceTrackingEvent) {
+      sendCampaignInstanceTrackingEvent('animatedBannerClick');
+    }
 
     // If callback fire it
     if (this.data.onClick) this.data.onClick.apply(this, this.data);
