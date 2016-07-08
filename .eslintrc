@@ -9,7 +9,8 @@
     "pmAnimatedBannersConfig": true,
     "createjs": true,
     "stage": true,
-    "sendCampaignInstanceTrackingEvent": true
+    "sendCampaignInstanceTrackingEvent": true,
+    "templateData": true
   },
   "rules": {
     "no-underscore-dangle": 0

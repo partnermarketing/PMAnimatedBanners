@@ -16,7 +16,7 @@ To run eslint and unit tests use the command `npm test`
 
 Include `dist/pmAnimatedBanners.min.js` above the closing `</body>` tag of the template. Custom properties are to be defined independently from the lib using the `window.pmAnimatedBannersConfig` method. Add the following JavaScript to the template to start customisation.
 
-### Mapping user data
+### Mapping data to animation
 ```javascript
   window.pmAnimatedBannersConfig = function(conf) {
 
@@ -41,6 +41,20 @@ Include `dist/pmAnimatedBanners.min.js` above the closing `</body>` tag of the t
     conf.map({
       reference: 'stage',
       link: 'http://www.partnermarketing.com'
+    });
+
+  };
+```
+
+### Requesting user data from api
+Data can be retrieved from the api using the getPmData() method, it accepts two arguments. The first is the type this can be either `image`, `text`, `colour`, `link` and the second is the name as defined in the editor.
+
+```javascript
+  window.pmAnimatedBannersConfig = function(conf) {
+
+    conf.map({
+      reference: 'scene1',
+      link: getPmData('link', 'scene-1-link')
     });
 
   };
