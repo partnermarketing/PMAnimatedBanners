@@ -6,6 +6,9 @@
  * @return {String} the template data value
  */
 export default window.getPmData = (type, name) => {
+  // ensure api is accessible
+  if (!window.templateData) throw Error('unable to access api');
+
   // setup data cache
   window.pmDataCache = {};
   let result;
