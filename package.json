@@ -1,15 +1,15 @@
 {
   "name": "pm-animated-banners",
   "version": "1.0.0",
-  "description": "an api for partnermarketing animated banner customisation",
-  "homepage": "http://www.partnermarketing.com/",
+  "description": "An api for designers to costumise animated banners in partnermarketing.com Campaign Builder",
+  "homepage": "https://www.partnermarketing.com/",
   "keywords": [
     "animateCC",
     "animated",
     "banners",
     "html5"
   ],
-  "author": "Partner Marketing <supp.acc@partnermarketing.com>",
+  "author": "partnermarketing.com <supp.acc@partnermarketing.com>",
   "repository": {
     "type": "git",
     "url": "git@github.com:partnermarketing/pm-animated-banners.git"
