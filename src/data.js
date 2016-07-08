@@ -8,28 +8,20 @@
 export default window.getPmData = (type, name) => {
   // ensure api is accessible
   if (!window.templateData) throw Error('unable to access api');
-
   // setup data cache
   window.pmDataCache = {};
   let result;
-
   // fetch data by type and name
   if (type === 'image') {
-    result = templateData.images.getByName(name);
+    result = templateData.getImageByName(name);
   } else if (type === 'text') {
-    result = templateData.texts.getByName(name);
+    result = templateData.getTextByName(name);
   } else if (type === 'colour' || type === 'color') {
-    result = templateData.colours.getByName(name);
+    result = templateData.getColoursByName(name);
   } else if (type === 'link') {
-    result = templateData.links.getByName(name);
+    result = templateData.getLinkByName(name);
   }
-
-  if (!result) {
-    throw Error(`${type} with identifier ${name} was not found!`);
-  }
-
   // store data in cache
   window.pmDataCache[type][name] = result.value;
-
-  return type === 'link' ? result.url : result.value;
+  return result;
 };
