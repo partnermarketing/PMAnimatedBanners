@@ -22,6 +22,6 @@ export default window.getPmData = (type, name) => {
     result = templateData.getLinkByName(name);
   }
   // store data in cache
-  window.pmDataCache[type][name] = result.value;
+  window.pmDataCache[type][name] = result;
   return result;
 };
