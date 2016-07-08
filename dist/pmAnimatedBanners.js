@@ -4,60 +4,16 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-/**
- * getPmData method to retrieve users template data from the api
- *
- * @param  {String} type [the type of data, either 'image', 'text', 'colour' or 'link']
- * @param  {String} name [the data reference as defined in the template editor]
- * @return {String} the template data value
- */
-
-exports.default = window.getPmData = function (type, name) {
-  // setup data cache
-  window.pmDataCache = {};
-  var result = void 0;
-
-  // fetch data by type and name
-  if (type === 'image') {
-    result = templateData.images.getByName(name);
-  } else if (type === 'text') {
-    result = templateData.texts.getByName(name);
-  } else if (type === 'colour' || type === 'color') {
-    result = templateData.colours.getByName(name);
-  } else if (type === 'link') {
-    result = templateData.links.getByName(name);
-  }
-
-  if (!result) {
-    throw Error(type + ' with identifier ' + name + ' was not found!');
-  }
-
-  // store data in cache
-  window.pmDataCache[type][name] = result.value;
-
-  return type === 'link' ? result.url : result.value;
-};
-
-},{}],2:[function(require,module,exports){
-'use strict';
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
 
 var _loader = require('./loader');
 
 var _loader2 = _interopRequireDefault(_loader);
 
-var _data = require('./data');
-
-var _data2 = _interopRequireDefault(_data);
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 exports.default = new _loader2.default();
 
-},{"./data":1,"./loader":4}],3:[function(require,module,exports){
+},{"./loader":3}],2:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -294,7 +250,7 @@ var Layer = function () {
 
 exports.default = Layer;
 
-},{}],4:[function(require,module,exports){
+},{}],3:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -410,4 +366,4 @@ var Loader = function () {
 
 exports.default = Loader;
 
-},{"./layer":3}]},{},[2]);
+},{"./layer":2}]},{},[1]);
