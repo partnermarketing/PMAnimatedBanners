@@ -442,17 +442,17 @@ var Loader = function () {
 
       // Track mouse hover events
       stage.on('stagemousemove', function (e) {
-        // Calculate which child layers of loader were clicked
-        var clickedLayers = _this.layers.filter(function (layer) {
+        // Calculate which child layers are being hovered
+        var hoveredLayers = _this.layers.filter(function (layer) {
           return stage.getObjectsUnderPoint(e.stageX, e.stageY, 0).indexOf(layer.shape) > -1;
         });
-        // Fire the layers click method
-        clickedLayers.forEach(function (layer) {
+        // Change the canvas cursor if hovering a clickable element
+        hoveredLayers.forEach(function (layer) {
           if (layer.data.link || layer.data.onClick) {
             _cursor2.default.set('pointer');
           }
         });
-        if (clickedLayers.length === 0) {
+        if (hoveredLayers.length === 0) {
           _cursor2.default.set('default');
         }
       });

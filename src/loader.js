@@ -50,17 +50,17 @@ export default class Loader {
   bindEvents() {
     // Track mouse hover events
     stage.on('stagemousemove', (e) => {
-      // Calculate which child layers of loader were clicked
-      const clickedLayers = this.layers.filter(
+      // Calculate which child layers are being hovered
+      const hoveredLayers = this.layers.filter(
         layer => stage.getObjectsUnderPoint(e.stageX, e.stageY, 0).indexOf(layer.shape) > -1
       );
-      // Fire the layers click method
-      clickedLayers.forEach(layer => {
+      // Change the canvas cursor if hovering a clickable element
+      hoveredLayers.forEach(layer => {
         if (layer.data.link || layer.data.onClick) {
           cursor.set('pointer');
         }
       });
-      if (clickedLayers.length === 0) {
+      if (hoveredLayers.length === 0) {
         cursor.set('default');
       }
     });
