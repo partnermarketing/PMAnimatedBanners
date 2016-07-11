@@ -101,6 +101,7 @@ exports.default = window.getPmData = function (type, name) {
     result = templateData.getLinkByName(name);
   }
   // store data in cache
+  if (!window.pmDataCache[type]) window.pmDataCache[type] = {};
   window.pmDataCache[type][name] = result;
   return result;
 };
