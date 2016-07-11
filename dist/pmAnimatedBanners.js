@@ -4,6 +4,78 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+
+var _util = require('./util');
+
+var _util2 = _interopRequireDefault(_util);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * Cursor module for controlling hover states in the canvas, will inject
+ * custom css rules into the DOM and return methods for changing the
+ * cursor.
+ *
+ * @return {Object} Object literal with methods for setting and getting
+ *                  the cursor, accepted cursor types 'pointers' and
+ *                  'default'
+ */
+
+exports.default = function () {
+  // inject css rules into the dom
+  (function (head) {
+    // set css rules
+    var css = '\n      canvas#canvas {\n        cursor: default !important;\n      }\n      canvas#canvas.has-pointer {\n        cursor: pointer !important;\n      }\n    ';
+    var style = document.createElement('style');
+
+    // insert css rules to stylesheet
+    style.type = 'text/css';
+    if (style.styleSheet) {
+      style.styleSheet.cssText = css;
+    } else {
+      style.appendChild(document.createTextNode(css));
+    }
+
+    // inject to head
+    head.appendChild(style);
+  })(document.head || document.getElementsByTagName('head')[0]);
+
+  var cursor = void 0;
+  return {
+
+    /**
+     * set cursor state for canvas
+     *
+     * @param  {String} state [the cursor state, accepts either 'pointer' or 'default']
+     * @return {Void} Void
+     */
+    set: function set(state) {
+      cursor = state;
+      if (typeof stage !== 'undefined' && cursor === 'pointer') {
+        _util2.default.addClass(stage.canvas, 'has-pointer');
+      } else if (typeof stage !== 'undefined') {
+        _util2.default.removeClass(stage.canvas, 'has-pointer');
+      }
+    },
+
+    /**
+     * gets cursor state
+     *
+     * @return {String} the current cursor
+     */
+    get: function get() {
+      return cursor;
+    }
+
+  };
+}();
+
+},{"./util":6}],2:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
 /**
  * getPmData method to retrieve users template data from the api
  *
@@ -15,33 +87,25 @@ Object.defineProperty(exports, "__esModule", {
 exports.default = window.getPmData = function (type, name) {
   // ensure api is accessible
   if (!window.templateData) throw Error('unable to access api');
-
   // setup data cache
   window.pmDataCache = {};
   var result = void 0;
-
   // fetch data by type and name
   if (type === 'image') {
-    result = templateData.images.getByName(name);
+    result = templateData.getImageByName(name);
   } else if (type === 'text') {
-    result = templateData.texts.getByName(name);
+    result = templateData.getTextByName(name);
   } else if (type === 'colour' || type === 'color') {
-    result = templateData.colours.getByName(name);
+    result = templateData.getColoursByName(name);
   } else if (type === 'link') {
-    result = templateData.links.getByName(name);
+    result = templateData.getLinkByName(name);
   }
-
-  if (!result) {
-    throw Error(type + ' with identifier ' + name + ' was not found!');
-  }
-
   // store data in cache
-  window.pmDataCache[type][name] = result.value;
-
-  return type === 'link' ? result.url : result.value;
+  window.pmDataCache[type][name] = result;
+  return result;
 };
 
-},{}],2:[function(require,module,exports){
+},{}],3:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -58,7 +122,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 exports.default = new _loader2.default();
 
-},{"./data":1,"./loader":4}],3:[function(require,module,exports){
+},{"./data":2,"./loader":5}],4:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -295,7 +359,7 @@ var Layer = function () {
 
 exports.default = Layer;
 
-},{}],4:[function(require,module,exports){
+},{}],5:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -307,6 +371,10 @@ var _createClass = function () { function defineProperties(target, props) { for 
 var _layer = require('./layer');
 
 var _layer2 = _interopRequireDefault(_layer);
+
+var _cursor = require('./cursor');
+
+var _cursor2 = _interopRequireDefault(_cursor);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -349,6 +417,10 @@ var Loader = function () {
       // Invoke animate CC init method
       this._init();
 
+      // Enable mouse hover tracking
+      stage.enableMouseOver();
+      stage.useHandCursor = false;
+
       // Bind stage click events
       this.bindEvents();
 
@@ -367,6 +439,23 @@ var Loader = function () {
     key: 'bindEvents',
     value: function bindEvents() {
       var _this = this;
+
+      // Track mouse hover events
+      stage.on('stagemousemove', function (e) {
+        // Calculate which child layers of loader were clicked
+        var clickedLayers = _this.layers.filter(function (layer) {
+          return stage.getObjectsUnderPoint(e.stageX, e.stageY, 0).indexOf(layer.shape) > -1;
+        });
+        // Fire the layers click method
+        clickedLayers.forEach(function (layer) {
+          if (layer.data.link || layer.data.onClick) {
+            _cursor2.default.set('pointer');
+          }
+        });
+        if (clickedLayers.length === 0) {
+          _cursor2.default.set('default');
+        }
+      });
 
       // Track stage click events
       stage.on('click', function (e) {
@@ -411,4 +500,66 @@ var Loader = function () {
 
 exports.default = Loader;
 
-},{"./layer":3}]},{},[2]);
+},{"./cursor":1,"./layer":4}],6:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+/**
+ * Utility module for generic methods
+ */
+exports.default = {
+
+  /**
+   * has class method, will determine if element has a class
+   *
+   * @param  {Element} el [the element to check]
+   * @param  {String} className [the class to look for]
+   * @return {Boolean} [if element has class]
+   */
+  hasClass: function hasClass(el, className) {
+    var hasClass = void 0;
+    if (el.classList) {
+      hasClass = el.classList.contains(className);
+    } else {
+      hasClass = !!el.className.match(new RegExp('(\\s|^)' + className + '(\\s|$)'));
+    }
+    return hasClass;
+  },
+
+  /**
+   * add class method, will add a class to an element
+   *
+   * @param  {Element} el [the element to include class on]
+   * @param  {String} className [the class to add]
+   * @return {Void} Void
+   */
+  addClass: function addClass(el, className) {
+    if (el.classList) {
+      el.classList.add(className);
+    } else if (!undefined.hasClass(el, className)) {
+      // eslint-disable-next-line no-param-reassign
+      el.className += ' ' + className;
+    }
+  },
+
+  /**
+   * remove class method, will remove a class from an element
+   *
+   * @param  {Element} el [the element to remove class from]
+   * @param  {String} className [the class to remove]
+   * @return {Void} Void
+   */
+  removeClass: function removeClass(el, className) {
+    if (el.classList) {
+      el.classList.remove(className);
+    } else if (undefined.hasClass(el, className)) {
+      // eslint-disable-next-line no-param-reassign
+      el.className = el.className.replace(new RegExp('(\\s|^)' + className + '(\\s|$)'), ' ');
+    }
+  }
+
+};
+
+},{}]},{},[3]);

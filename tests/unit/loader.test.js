@@ -16,7 +16,8 @@ describe('loader', function () {
     
     window.stage = {
       on: () => {},
-      children: []
+      children: [],
+      enableMouseOver: () => {}
     };
 
     loader = new Loader();
