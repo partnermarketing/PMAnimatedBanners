@@ -1,4 +1,5 @@
 import Layer from './layer';
+import cursor from './cursor';
 
 /**
  * Loader class, entry point to the API
@@ -29,6 +30,10 @@ export default class Loader {
     // Invoke animate CC init method
     this._init();
 
+    // Enable mouse hover tracking
+    stage.enableMouseOver();
+    stage.useHandCursor = false;
+
     // Bind stage click events
     this.bindEvents();
 
@@ -43,6 +48,22 @@ export default class Loader {
    * @return {Void} void
    */
   bindEvents() {
+    stage.on('stagemousemove', (e) => {
+      // Calculate which child layers of loader were clicked
+      const clickedLayers = this.layers.filter(
+        layer => stage.getObjectsUnderPoint(e.stageX, e.stageY, 0).indexOf(layer.shape) > -1
+      );
+      // Fire the layers click method
+      clickedLayers.forEach(layer => {
+        if (layer.data.link || layer.data.onClick) {
+          cursor.set('pointer');
+        }
+      });
+      if (clickedLayers.length === 0) {
+        cursor.set('default');
+      }
+    });
+
     // Track stage click events
     stage.on('click', (e) => {
       // Calculate which child layers of loader were clicked
