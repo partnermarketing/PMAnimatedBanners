@@ -11,12 +11,24 @@ var _util2 = _interopRequireDefault(_util);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+/**
+ * Cursor module for controlling hover states in the canvas, will inject
+ * custom css rules into the DOM and return methods for changing the
+ * cursor.
+ *
+ * @return {Object} Object literal with methods for setting and getting
+ *                  the cursor, accepted cursor types 'pointers' and
+ *                  'default'
+ */
+
 exports.default = function () {
+  // inject css rules into the dom
   (function (head) {
-    // Inject css rules for cursor events
+    // set css rules
     var css = '\n      canvas#canvas {\n        cursor: default !important;\n      }\n      canvas#canvas.has-pointer {\n        cursor: pointer !important;\n      }\n    ';
     var style = document.createElement('style');
 
+    // insert css rules to stylesheet
     style.type = 'text/css';
     if (style.styleSheet) {
       style.styleSheet.cssText = css;
@@ -24,13 +36,19 @@ exports.default = function () {
       style.appendChild(document.createTextNode(css));
     }
 
+    // inject to head
     head.appendChild(style);
   })(document.head || document.getElementsByTagName('head')[0]);
 
   var cursor = void 0;
-
   return {
 
+    /**
+     * set cursor state for canvas
+     *
+     * @param  {String} state [the cursor state, accepts either 'pointer' or 'default']
+     * @return {Void} Void
+     */
     set: function set(state) {
       cursor = state;
       if (cursor === 'pointer') {
@@ -40,6 +58,11 @@ exports.default = function () {
       }
     },
 
+    /**
+     * gets cursor state
+     *
+     * @return {String} the current cursor
+     */
     get: function get() {
       return cursor;
     }
@@ -417,6 +440,7 @@ var Loader = function () {
     value: function bindEvents() {
       var _this = this;
 
+      // Track mouse hover events
       stage.on('stagemousemove', function (e) {
         // Calculate which child layers of loader were clicked
         var clickedLayers = _this.layers.filter(function (layer) {
@@ -482,8 +506,18 @@ exports.default = Loader;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+/**
+ * Utility module for generic methods
+ */
 exports.default = {
 
+  /**
+   * has class method, will determine if element has a class
+   *
+   * @param  {Element} el [the element to check]
+   * @param  {String} className [the class to look for]
+   * @return {Boolean} [if element has class]
+   */
   hasClass: function hasClass(el, className) {
     var hasClass = void 0;
     if (el.classList) {
@@ -494,6 +528,13 @@ exports.default = {
     return hasClass;
   },
 
+  /**
+   * add class method, will add a class to an element
+   *
+   * @param  {Element} el [the element to include class on]
+   * @param  {String} className [the class to add]
+   * @return {Void} Void
+   */
   addClass: function addClass(el, className) {
     if (el.classList) {
       el.classList.add(className);
@@ -503,6 +544,13 @@ exports.default = {
     }
   },
 
+  /**
+   * remove class method, will remove a class from an element
+   *
+   * @param  {Element} el [the element to remove class from]
+   * @param  {String} className [the class to remove]
+   * @return {Void} Void
+   */
   removeClass: function removeClass(el, className) {
     if (el.classList) {
       el.classList.remove(className);

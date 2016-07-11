@@ -48,6 +48,7 @@ export default class Loader {
    * @return {Void} void
    */
   bindEvents() {
+    // Track mouse hover events
     stage.on('stagemousemove', (e) => {
       // Calculate which child layers of loader were clicked
       const clickedLayers = this.layers.filter(
