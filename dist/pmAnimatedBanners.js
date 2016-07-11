@@ -51,9 +51,9 @@ exports.default = function () {
      */
     set: function set(state) {
       cursor = state;
-      if (cursor === 'pointer') {
+      if (typeof stage !== 'undefined' && cursor === 'pointer') {
         _util2.default.addClass(stage.canvas, 'has-pointer');
-      } else {
+      } else if (typeof stage !== 'undefined') {
         _util2.default.removeClass(stage.canvas, 'has-pointer');
       }
     },

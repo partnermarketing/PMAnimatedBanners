@@ -46,9 +46,9 @@ export default (() => {
      */
     set: state => {
       cursor = state;
-      if (cursor === 'pointer') {
+      if (typeof stage !== 'undefined' && cursor === 'pointer') {
         util.addClass(stage.canvas, 'has-pointer');
-      } else {
+      } else if (typeof stage !== 'undefined') {
         util.removeClass(stage.canvas, 'has-pointer');
       }
     },
