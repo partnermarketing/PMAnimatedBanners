@@ -425,6 +425,9 @@ var Loader = function () {
       // Bind stage click events
       this.bindEvents();
 
+      // Set pause timeout if defined
+      if (window.stopMilliseconds) this.setPauseTimeout();
+
       // Load config to import users template data
       if (window.pmAnimatedBannersConfig) pmAnimatedBannersConfig(this);
     }
@@ -470,6 +473,27 @@ var Loader = function () {
           return layer.clicked();
         });
       });
+    }
+
+    /**
+     * Pause timeout method, used to pause the animation at a certain point as
+     * defined by window.stopMilliseconds
+     *
+     * @return {Void} void
+     */
+
+  }, {
+    key: 'setPauseTimeout',
+    value: function setPauseTimeout() {
+      // Setup timeout
+      this.timeout = setTimeout(function () {
+        // Get children of stage and stop all
+        if (stage && stage.children) {
+          for (var i = 0; i < stage.children.length; i++) {
+            if ('stop' in stage.children[i]) stage.children[i].stop();
+          }
+        }
+      }, window.stopMilliseconds);
     }
 
     /**

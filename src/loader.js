@@ -37,6 +37,9 @@ export default class Loader {
     // Bind stage click events
     this.bindEvents();
 
+    // Set pause timeout if defined
+    if (window.stopMilliseconds) this.setPauseTimeout();
+
     // Load config to import users template data
     if (window.pmAnimatedBannersConfig) pmAnimatedBannersConfig(this);
   }
@@ -75,6 +78,24 @@ export default class Loader {
       // Fire the layers click method
       clickedLayers.forEach(layer => layer.clicked());
     });
+  }
+
+  /**
+   * Pause timeout method, used to pause the animation at a certain point as
+   * defined by window.stopMilliseconds
+   *
+   * @return {Void} void
+   */
+  setPauseTimeout() {
+    // Setup timeout
+    this.timeout = setTimeout(() => {
+      // Get children of stage and stop all
+      if (stage && stage.children) {
+        for (let i = 0; i < stage.children.length; i++) {
+          if ('stop' in stage.children[i]) stage.children[i].stop();
+        }
+      }
+    }, window.stopMilliseconds);
   }
 
   /**
