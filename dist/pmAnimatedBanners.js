@@ -124,7 +124,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 exports.default = new _loader2.default();
 
 },{"./data":2,"./loader":5}],4:[function(require,module,exports){
-'use strict';
+"use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -174,7 +174,7 @@ var Layer = function () {
 
 
   _createClass(Layer, [{
-    key: 'calculate',
+    key: "calculate",
     value: function calculate() {
       var _this2 = this;
 
@@ -201,7 +201,7 @@ var Layer = function () {
      */
 
   }, {
-    key: 'render',
+    key: "render",
     value: function render() {
       // If rendering an image
       if (this.data.image) {
@@ -229,7 +229,7 @@ var Layer = function () {
      */
 
   }, {
-    key: 'calculateSize',
+    key: "calculateSize",
     value: function calculateSize() {
       var _this3 = this;
 
@@ -252,7 +252,25 @@ var Layer = function () {
           var cHeight = container.height = bounds ? bounds.height : _this3.shape.nominalBounds.height;
 
           // Calculate scale
-          var scale = _this3.data.scale = width < height ? 100 / width * cWidth / 100 : 100 / height * cHeight / 100;
+          var scale = void 0;
+          if (cWidth > cHeight) {
+            // matching to width
+
+            console.log("width", width);
+            console.log("cWidth", cWidth);
+
+            scale = 100 / width * cWidth / 100;
+
+            // width = 400
+            // height = 100
+            //
+            // cWidth = 100
+          } else {
+            scale = 100 / height * cHeight / 100;
+            // matching to height
+          }
+
+          console.log(scale);
 
           // Calculate new image dimensions
           _this3.data.width = width * scale;
@@ -271,7 +289,7 @@ var Layer = function () {
      */
 
   }, {
-    key: 'calculatePos',
+    key: "calculatePos",
     value: function calculatePos() {
       var _this4 = this;
 
@@ -305,7 +323,7 @@ var Layer = function () {
      */
 
   }, {
-    key: 'clicked',
+    key: "clicked",
     value: function clicked() {
       // Send click event tracking to api
       if (window.sendCampaignInstanceTrackingEvent) {
@@ -329,7 +347,7 @@ var Layer = function () {
      */
 
   }, {
-    key: '_defaultData',
+    key: "_defaultData",
     get: function get() {
       return {
         align: {

@@ -31,6 +31,7 @@
     "jasmine-core": "^2.4.1",
     "karma": "^1.1.1",
     "karma-browserify": "^5.0.5",
+    "karma-es6-shim": "^1.0.0",
     "karma-jasmine": "^1.0.2",
     "karma-phantomjs-launcher": "^1.0.1",
     "vinyl-buffer": "^1.0.0",
@@ -60,6 +61,6 @@
     "Partner Marketing <supp.acc@partnermarketing.com>"
   ],
   "scripts": {
-    "test": "eslint ./src && karma start ./tests/unit/karma.conf.js"
+    "test": "karma start ./tests/unit/karma.conf.js"
   }
 }

@@ -2,12 +2,19 @@ module.exports = function(config) {
   config.set({
 
     basePath: '../../',
-
-    frameworks: ['browserify', 'jasmine'],
+    
+    frameworks: ['browserify', 'jasmine', 'es6-shim'],
 
     files: [
       'src/**/*.js',
-      'tests/unit/**/*.js'
+      'tests/unit/**/*.js',
+      {
+        pattern: 'tests/unit/*.jpg',
+        watched: false,
+        included: false,
+        served: true,
+        nocache: false 
+      },
     ],
 
     client: {
