@@ -109,10 +109,6 @@ exports.default = window.getPmData = function (type, name) {
 },{}],3:[function(require,module,exports){
 'use strict';
 
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
 var _loader = require('./loader');
 
 var _loader2 = _interopRequireDefault(_loader);
@@ -121,7 +117,13 @@ require('./data');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-exports.default = new _loader2.default();
+var interval = setInterval(function () {
+  if (stage) {
+    // eslint-disable-next-line no-unused-vars
+    var loader = new _loader2.default();
+    clearInterval(interval);
+  }
+}, 1);
 
 },{"./data":2,"./loader":5}],4:[function(require,module,exports){
 'use strict';
