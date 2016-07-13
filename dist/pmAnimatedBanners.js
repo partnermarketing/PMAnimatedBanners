@@ -252,7 +252,7 @@ var Layer = function () {
           var cHeight = container.height = bounds ? bounds.height : _this3.shape.nominalBounds.height;
 
           // Calculate scale
-          var scale = _this3.data.scale = width > height ? 100 / width * cWidth / 100 : 100 / height * cHeight / 100;
+          var scale = _this3.data.scale = width < height ? 100 / width * cWidth / 100 : 100 / height * cHeight / 100;
 
           // Calculate new image dimensions
           _this3.data.width = width * scale;
@@ -376,6 +376,10 @@ var _layer2 = _interopRequireDefault(_layer);
 var _cursor = require('./cursor');
 
 var _cursor2 = _interopRequireDefault(_cursor);
+
+var _util = require('./util');
+
+var _util2 = _interopRequireDefault(_util);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -508,7 +512,8 @@ var Loader = function () {
     key: 'map',
     value: function map(data) {
       // Get createjs shape from designer reference
-      var shape = stage.children[data.reference] || stage.children[0][data.reference];
+      var shape = _util2.default.searchAnimateChildren(stage, data.reference);
+      // Keep searching children until no children for each
       if (data.reference === 'stage') {
         // Create new layer for entire stage
         var stageLayer = new _layer2.default(data, stage);
@@ -525,7 +530,7 @@ var Loader = function () {
 
 exports.default = Loader;
 
-},{"./cursor":1,"./layer":4}],6:[function(require,module,exports){
+},{"./cursor":1,"./layer":4,"./util":6}],6:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -534,7 +539,7 @@ Object.defineProperty(exports, "__esModule", {
 /**
  * Utility module for generic methods
  */
-exports.default = {
+var util = {
 
   /**
    * has class method, will determine if element has a class
@@ -583,8 +588,60 @@ exports.default = {
       // eslint-disable-next-line no-param-reassign
       el.className = el.className.replace(new RegExp('(\\s|^)' + className + '(\\s|$)'), ' ');
     }
+  },
+
+  /**
+   * search animate children method, for searching the stage for
+   * an animate CC reference
+   *
+   * @param  {Object} obj [the object to search]
+   * @param  {String} key [the key to search for]
+   * @return {Object|Undefined} if found will return the createjs shape
+   */
+  searchAnimateChildren: function searchAnimateChildren(obj, key) {
+    var match = void 0;
+    // Loop children
+    var _iteratorNormalCompletion = true;
+    var _didIteratorError = false;
+    var _iteratorError = undefined;
+
+    try {
+      for (var _iterator = obj.children[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+        var child = _step.value;
+
+        // If match found break and return
+        if (child[key]) {
+          match = child[key];
+          break;
+          // If no match recursively check this children
+        } else if (child.children && child.children.length !== 0) {
+          var nextScan = util.searchAnimateChildren(child, key);
+          if (nextScan) {
+            match = nextScan;
+            break;
+          }
+        }
+      }
+    } catch (err) {
+      _didIteratorError = true;
+      _iteratorError = err;
+    } finally {
+      try {
+        if (!_iteratorNormalCompletion && _iterator.return) {
+          _iterator.return();
+        }
+      } finally {
+        if (_didIteratorError) {
+          throw _iteratorError;
+        }
+      }
+    }
+
+    return match;
   }
 
 };
+
+exports.default = util;
 
 },{}]},{},[3]);
