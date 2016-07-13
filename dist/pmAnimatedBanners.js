@@ -595,48 +595,29 @@ var util = {
    * an animate CC reference
    *
    * @param  {Object} obj [the object to search]
-   * @param  {String} key [the key to search for]
+   * @param  {String} prop [the key to search for]
    * @return {Object|Undefined} if found will return the createjs shape
    */
-  searchAnimateChildren: function searchAnimateChildren(obj, key) {
+  searchAnimateChildren: function searchAnimateChildren(obj, prop) {
     var match = void 0;
     // Loop children
-    var _iteratorNormalCompletion = true;
-    var _didIteratorError = false;
-    var _iteratorError = undefined;
-
-    try {
-      for (var _iterator = obj.children[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-        var child = _step.value;
-
+    if (obj.children) {
+      // eslint-disable-next-line no-restricted-syntax
+      for (var key in obj.children) {
         // If match found break and return
-        if (child[key]) {
-          match = child[key];
+        if (obj.children[key][prop]) {
+          match = obj.children[key][prop];
           break;
           // If no match recursively check this children
-        } else if (child.children && child.children.length !== 0) {
-          var nextScan = util.searchAnimateChildren(child, key);
+        } else if (obj.children[key].children && obj.children[key].children.length !== 0) {
+          var nextScan = util.searchAnimateChildren(obj.children[key], prop);
           if (nextScan) {
             match = nextScan;
             break;
           }
         }
       }
-    } catch (err) {
-      _didIteratorError = true;
-      _iteratorError = err;
-    } finally {
-      try {
-        if (!_iteratorNormalCompletion && _iterator.return) {
-          _iterator.return();
-        }
-      } finally {
-        if (_didIteratorError) {
-          throw _iteratorError;
-        }
-      }
     }
-
     return match;
   }
 

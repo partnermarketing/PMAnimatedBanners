@@ -57,23 +57,26 @@ const util = {
    * an animate CC reference
    *
    * @param  {Object} obj [the object to search]
-   * @param  {String} key [the key to search for]
+   * @param  {String} prop [the key to search for]
    * @return {Object|Undefined} if found will return the createjs shape
    */
-  searchAnimateChildren: (obj, key) => {
+  searchAnimateChildren: (obj, prop) => {
     let match;
     // Loop children
-    for (const child of obj.children) {
-      // If match found break and return
-      if (child[key]) {
-        match = child[key];
-        break;
-      // If no match recursively check this children
-      } else if (child.children && child.children.length !== 0) {
-        const nextScan = util.searchAnimateChildren(child, key);
-        if (nextScan) {
-          match = nextScan;
+    if (obj.children) {
+      // eslint-disable-next-line no-restricted-syntax
+      for (const key in obj.children) {
+        // If match found break and return
+        if (obj.children[key][prop]) {
+          match = obj.children[key][prop];
           break;
+        // If no match recursively check this children
+        } else if (obj.children[key].children && obj.children[key].children.length !== 0) {
+          const nextScan = util.searchAnimateChildren(obj.children[key], prop);
+          if (nextScan) {
+            match = nextScan;
+            break;
+          }
         }
       }
     }
