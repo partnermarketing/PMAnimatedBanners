@@ -1,5 +1,6 @@
 import Layer from './layer';
 import cursor from './cursor';
+import util from './util';
 
 /**
  * Loader class, entry point to the API
@@ -107,7 +108,8 @@ export default class Loader {
    */
   map(data) {
     // Get createjs shape from designer reference
-    const shape = stage.children[data.reference] || stage.children[0][data.reference];
+    const shape = util.searchAnimateChildren(stage, data.reference);
+    // Keep searching children until no children for each
     if (data.reference === 'stage') {
       // Create new layer for entire stage
       const stageLayer = new Layer(data, stage);

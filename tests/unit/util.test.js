@@ -30,4 +30,17 @@ describe('util', function () {
     expect(util.hasClass(el, 'has-another-class')).toEqual(false);
   });
 
+  it('should find an objects child value by key', () => {
+    let obj = {
+      children: [{}, {}, {
+        children: [{}, {}, {
+          children: [{
+            foobar: 'foobar'
+          }]
+        }]
+      }]
+    };
+    expect(util.searchAnimateChildren(obj, 'foobar')).toEqual('foobar');
+  });
+
 });

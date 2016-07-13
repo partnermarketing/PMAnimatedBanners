@@ -1,7 +1,7 @@
 /**
  * Utility module for generic methods
  */
-export default {
+const util = {
 
   /**
    * has class method, will determine if element has a class
@@ -52,4 +52,37 @@ export default {
     }
   },
 
+  /**
+   * search animate children method, for searching the stage for
+   * an animate CC reference
+   *
+   * @param  {Object} obj [the object to search]
+   * @param  {String} prop [the key to search for]
+   * @return {Object|Undefined} if found will return the createjs shape
+   */
+  searchAnimateChildren: (obj, prop) => {
+    let match;
+    // Loop children
+    if (obj.children) {
+      // eslint-disable-next-line no-restricted-syntax
+      for (const key in obj.children) {
+        // If match found break and return
+        if (obj.children[key][prop]) {
+          match = obj.children[key][prop];
+          break;
+        // If no match recursively check this children
+        } else if (obj.children[key].children && obj.children[key].children.length !== 0) {
+          const nextScan = util.searchAnimateChildren(obj.children[key], prop);
+          if (nextScan) {
+            match = nextScan;
+            break;
+          }
+        }
+      }
+    }
+    return match;
+  },
+
 };
+
+export default util;

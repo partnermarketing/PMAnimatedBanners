@@ -92,8 +92,12 @@ export default class Layer {
         const cHeight = container.height = bounds ? bounds.height : this.shape.nominalBounds.height;
 
         // Calculate scale
-        const scale = this.data.scale = width > height ?
-          ((100 / width) * cWidth) / 100 : ((100 / height) * cHeight) / 100;
+        let scale;
+        if (cWidth >= cHeight) {
+          scale = ((100 / width) * cWidth) / 100;
+        } else {
+          scale = ((100 / height) * cHeight) / 100;
+        }
 
         // Calculate new image dimensions
         this.data.width = width * scale;
