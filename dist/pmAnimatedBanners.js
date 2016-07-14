@@ -255,7 +255,11 @@ var Layer = function () {
 
           // Calculate scale
           var scale = void 0;
-          if (cWidth >= cHeight) {
+          if (cWidth >= cHeight && width >= height) {
+            _this3.data.scale = scale = 100 / width * cWidth / 100;
+          } else if (cWidth < cHeight && width < height) {
+            _this3.data.scale = scale = 100 / height * cHeight / 100;
+          } else if (width >= height) {
             _this3.data.scale = scale = 100 / height * cHeight / 100;
           } else {
             _this3.data.scale = scale = 100 / width * cWidth / 100;

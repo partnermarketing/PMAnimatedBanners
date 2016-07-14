@@ -93,7 +93,11 @@ export default class Layer {
 
         // Calculate scale
         let scale;
-        if (cWidth >= cHeight) {
+        if (cWidth >= cHeight && width >= height) {
+          this.data.scale = scale = ((100 / width) * cWidth) / 100;
+        } else if (cWidth < cHeight && width < height) {
+          this.data.scale = scale = ((100 / height) * cHeight) / 100;
+        } else if (width >= height) {
           this.data.scale = scale = ((100 / height) * cHeight) / 100;
         } else {
           this.data.scale = scale = ((100 / width) * cWidth) / 100;
