@@ -255,14 +255,21 @@ var Layer = function () {
 
           // Calculate scale
           var scale = void 0;
-          if (cWidth >= cHeight && width >= height) {
+          if (cWidth >= cHeight) {
             _this3.data.scale = scale = 100 / width * cWidth / 100;
-          } else if (cWidth < cHeight && width < height) {
-            _this3.data.scale = scale = 100 / height * cHeight / 100;
-          } else if (width >= height) {
-            _this3.data.scale = scale = 100 / height * cHeight / 100;
           } else {
+            _this3.data.scale = scale = 100 / height * cHeight / 100;
+          }
+
+          // Calculate new image dimensions
+          _this3.data.width = width * scale;
+          _this3.data.height = height * scale;
+
+          if (_this3.data.width > cWidth) {
             _this3.data.scale = scale = 100 / width * cWidth / 100;
+          }
+          if (_this3.data.height > cHeight) {
+            _this3.data.scale = scale = 100 / height * cHeight / 100;
           }
 
           // Calculate new image dimensions
