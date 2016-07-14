@@ -94,9 +94,9 @@ export default class Layer {
         // Calculate scale
         let scale;
         if (cWidth >= cHeight) {
-          scale = ((100 / width) * cWidth) / 100;
+          this.data.scale = scale = ((100 / height) * cHeight) / 100;
         } else {
-          scale = ((100 / height) * cHeight) / 100;
+          this.data.scale = scale = ((100 / width) * cWidth) / 100;
         }
 
         // Calculate new image dimensions
