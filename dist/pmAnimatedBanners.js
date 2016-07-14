@@ -399,8 +399,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 var Loader = function () {
 
   /**
-   * constructor method, assigned empty layers array and remaps
-   * window.init method for chaning to animate CC initiation
+   * constructor method
    *
    * @return {void} void
    */
@@ -411,46 +410,31 @@ var Loader = function () {
     // Set empty layers array
     this.layers = [];
 
-    // Extend window.init method as defined by animate CC
-    this._init = window.init;
-    window.init = this.init.bind(this);
-  }
-
-  /**
-   * initialise method, chain for animate CC initialise method
-   *
-   * @return {void} void
-   */
-
-
-  _createClass(Loader, [{
-    key: 'init',
-    value: function init() {
-      // Invoke animate CC init method
-      this._init();
-
-      // Enable mouse hover tracking
+    // Enable mouse hover tracking
+    if (stage) {
       stage.enableMouseOver();
       stage.useHandCursor = false;
 
       // Bind stage click events
       this.bindEvents();
-
-      // Set pause timeout if defined
-      if (window.stopMilliseconds) this.setPauseTimeout();
-
-      // Load config to import users template data
-      if (window.pmAnimatedBannersConfig) pmAnimatedBannersConfig(this);
     }
 
-    /**
-     * Event binding method, binds click events to stage to identify which
-     * child layer has been clicked.
-     *
-     * @return {Void} void
-     */
+    // Set pause timeout if defined
+    if (window.stopMilliseconds) this.setPauseTimeout();
 
-  }, {
+    // Load config to import users template data
+    if (window.pmAnimatedBannersConfig) pmAnimatedBannersConfig(this);
+  }
+
+  /**
+   * Event binding method, binds click events to stage to identify which
+   * child layer has been clicked.
+   *
+   * @return {Void} void
+   */
+
+
+  _createClass(Loader, [{
     key: 'bindEvents',
     value: function bindEvents() {
       var _this = this;

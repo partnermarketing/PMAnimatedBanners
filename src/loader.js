@@ -8,8 +8,7 @@ import util from './util';
 export default class Loader {
 
   /**
-   * constructor method, assigned empty layers array and remaps
-   * window.init method for chaning to animate CC initiation
+   * constructor method
    *
    * @return {void} void
    */
@@ -17,26 +16,14 @@ export default class Loader {
     // Set empty layers array
     this.layers = [];
 
-    // Extend window.init method as defined by animate CC
-    this._init = window.init;
-    window.init = this.init.bind(this);
-  }
-
-  /**
-   * initialise method, chain for animate CC initialise method
-   *
-   * @return {void} void
-   */
-  init() {
-    // Invoke animate CC init method
-    this._init();
-
     // Enable mouse hover tracking
-    stage.enableMouseOver();
-    stage.useHandCursor = false;
+    if (stage) {
+      stage.enableMouseOver();
+      stage.useHandCursor = false;
 
-    // Bind stage click events
-    this.bindEvents();
+      // Bind stage click events
+      this.bindEvents();
+    }
 
     // Set pause timeout if defined
     if (window.stopMilliseconds) this.setPauseTimeout();
