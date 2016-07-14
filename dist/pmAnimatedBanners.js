@@ -118,7 +118,7 @@ require('./data');
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var interval = setInterval(function () {
-  if (stage) {
+  if (typeof stage !== 'undefined') {
     // eslint-disable-next-line no-unused-vars
     var loader = new _loader2.default();
     clearInterval(interval);
