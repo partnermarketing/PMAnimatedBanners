@@ -21,7 +21,7 @@ describe('loader', function () {
 
     // Mock createjs lib
     window.createjs = {Bitmap: () => {this.setTransform = setTransform}};
-    window.stage = {update: () => {}};
+    window.stage = {update: () => {}, enableMouseOver: () => {}, on: () => {}};
     let shape = {getBounds: () => {return containerSize;},addChild: addChild};
 
     window.sendCampaignInstanceTrackingEvent = () => {

@@ -118,7 +118,7 @@ require('./data');
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var interval = setInterval(function () {
-  if (stage) {
+  if (typeof stage !== 'undefined') {
     // eslint-disable-next-line no-unused-vars
     var loader = new _loader2.default();
     clearInterval(interval);
@@ -256,9 +256,20 @@ var Layer = function () {
           // Calculate scale
           var scale = void 0;
           if (cWidth >= cHeight) {
-            scale = 100 / width * cWidth / 100;
+            _this3.data.scale = scale = 100 / width * cWidth / 100;
           } else {
-            scale = 100 / height * cHeight / 100;
+            _this3.data.scale = scale = 100 / height * cHeight / 100;
+          }
+
+          // Calculate new image dimensions
+          _this3.data.width = width * scale;
+          _this3.data.height = height * scale;
+
+          if (_this3.data.width > cWidth) {
+            _this3.data.scale = scale = 100 / width * cWidth / 100;
+          }
+          if (_this3.data.height > cHeight) {
+            _this3.data.scale = scale = 100 / height * cHeight / 100;
           }
 
           // Calculate new image dimensions
@@ -399,8 +410,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 var Loader = function () {
 
   /**
-   * constructor method, assigned empty layers array and remaps
-   * window.init method for chaning to animate CC initiation
+   * constructor method
    *
    * @return {void} void
    */
@@ -411,46 +421,31 @@ var Loader = function () {
     // Set empty layers array
     this.layers = [];
 
-    // Extend window.init method as defined by animate CC
-    this._init = window.init;
-    window.init = this.init.bind(this);
-  }
-
-  /**
-   * initialise method, chain for animate CC initialise method
-   *
-   * @return {void} void
-   */
-
-
-  _createClass(Loader, [{
-    key: 'init',
-    value: function init() {
-      // Invoke animate CC init method
-      this._init();
-
-      // Enable mouse hover tracking
+    // Enable mouse hover tracking
+    if (stage) {
       stage.enableMouseOver();
       stage.useHandCursor = false;
 
       // Bind stage click events
       this.bindEvents();
-
-      // Set pause timeout if defined
-      if (window.stopMilliseconds) this.setPauseTimeout();
-
-      // Load config to import users template data
-      if (window.pmAnimatedBannersConfig) pmAnimatedBannersConfig(this);
     }
 
-    /**
-     * Event binding method, binds click events to stage to identify which
-     * child layer has been clicked.
-     *
-     * @return {Void} void
-     */
+    // Set pause timeout if defined
+    if (window.stopMilliseconds) this.setPauseTimeout();
 
-  }, {
+    // Load config to import users template data
+    if (window.pmAnimatedBannersConfig) pmAnimatedBannersConfig(this);
+  }
+
+  /**
+   * Event binding method, binds click events to stage to identify which
+   * child layer has been clicked.
+   *
+   * @return {Void} void
+   */
+
+
+  _createClass(Loader, [{
     key: 'bindEvents',
     value: function bindEvents() {
       var _this = this;

@@ -2,7 +2,7 @@ import Loader from '../../src/loader';
 
 describe('loader', function () {
 
-  let loader, init, configRan, initRan;
+  let loader, configRan;
 
   beforeAll(() => {
 
@@ -10,27 +10,8 @@ describe('loader', function () {
       configRan = true;
     };
 
-    window.init = init = function() {
-      initRan = true;
-    };
-    
-    window.stage = {
-      on: () => {},
-      children: [],
-      enableMouseOver: () => {}
-    };
-
     loader = new Loader();
-    window.init();
 
-  });
-
-  it('should overwrite window.init method', () => {
-    expect(init !== window.init).toEqual(true);
-  });
-
-  it('should chain animate cc init method', () => {
-    expect(initRan).toEqual(true);
   });
 
   it('should call pmAnimatedBannersConfig', () => {
