@@ -28,6 +28,17 @@ gulp.task('js', function() {
     .pipe(gulp.dest('./dist'));
 });
 
+gulp.task('serve', function(done) {
+  const port = 4000;
+  const express = require('express');
+  const app = express();
+  app.use(express.static(__dirname));
+  app.listen(port, function () {
+     done();
+  });
+  console.log('Site served on http://localhost:' + port)
+});
+
 gulp.task('watch', function() {
 	gulp.watch('./src/**/*.*', ['js']);
 });
