@@ -28,6 +28,16 @@ gulp.task('js', function() {
     .pipe(gulp.dest('./dist'));
 });
 
+gulp.task('serve', function(done) {
+  var express = require('express');
+  var app = express();
+  app.use(express.static(__dirname));
+  app.listen(4000, function () {
+     done();
+  });
+  console.log('served on http://localhost:' + 4000)
+});
+
 gulp.task('watch', function() {
 	gulp.watch('./src/**/*.*', ['js']);
 });
