@@ -86,10 +86,10 @@ export default class Layer {
         const height = this.data._orig.height = this.imageEl.height;
 
         // Calculate container dimensions
-        const bounds = this.shape.getBounds();
+        const bounds = this.shape.nominalBounds;
         const container = this.data._container;
-        const cWidth = container.width = bounds ? bounds.width : this.shape.nominalBounds.width;
-        const cHeight = container.height = bounds ? bounds.height : this.shape.nominalBounds.height;
+        const cWidth = container.width = bounds ? bounds.width : this.shape.getBounds().width;
+        const cHeight = container.height = bounds ? bounds.height : this.shape.getBounds().height;
 
         // Calculate scale
         let scale;
