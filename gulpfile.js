@@ -29,13 +29,14 @@ gulp.task('js', function() {
 });
 
 gulp.task('serve', function(done) {
-  var express = require('express');
-  var app = express();
+  const port = 4000;
+  const express = require('express');
+  const app = express();
   app.use(express.static(__dirname));
-  app.listen(4000, function () {
+  app.listen(port, function () {
      done();
   });
-  console.log('served on http://localhost:' + 4000)
+  console.log('Site served on http://localhost:' + port)
 });
 
 gulp.task('watch', function() {
