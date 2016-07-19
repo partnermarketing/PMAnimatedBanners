@@ -248,10 +248,10 @@ var Layer = function () {
           var height = _this3.data._orig.height = _this3.imageEl.height;
 
           // Calculate container dimensions
-          var bounds = _this3.shape.getBounds();
+          var bounds = _this3.shape.nominalBounds;
           var container = _this3.data._container;
-          var cWidth = container.width = bounds ? bounds.width : _this3.shape.nominalBounds.width;
-          var cHeight = container.height = bounds ? bounds.height : _this3.shape.nominalBounds.height;
+          var cWidth = container.width = bounds ? bounds.width : _this3.shape.getBounds().width;
+          var cHeight = container.height = bounds ? bounds.height : _this3.shape.getBounds().height;
 
           // Calculate scale
           var scale = void 0;
