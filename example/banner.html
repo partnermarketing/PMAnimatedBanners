@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Animated Banner</title>
+<meta name="thumbnail-stop-ms" content="2000" />
+<script src="https://code.createjs.com/createjs-2015.11.26.min.js"></script>
+<script src="banner.js"></script>
+<script>
+var canvas, stage, exportRoot;
+function init() {
+	canvas = document.getElementById("canvas");
+	exportRoot = new lib.entrustaniban();
+	stage = new createjs.Stage(canvas);
+	stage.addChild(exportRoot);
+	stage.update();
+	stage.enableMouseOver();
+	createjs.Ticker.setFPS(lib.properties.fps);
+	createjs.Ticker.addEventListener("tick", stage);
+}
+</script>
+</head>
+<body onload="init();" style="background-color:#D4D4D4;margin:0px;">
+	<canvas id="canvas" width="728" height="90" style="background-color:#FFFFFF"></canvas>
+    <script src="/dist/pmAnimatedBanners.min.js"></script>
+	<script src="banner-mapping.js"></script>
+</body>
+</html>
+ 
