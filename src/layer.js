@@ -178,7 +178,7 @@ export default class Layer {
     return {
       align: {
         x: 'center',
-        y: 'center'
+        y: 'center',
       },
       target: '_blank',
       scale: 1,
