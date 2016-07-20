@@ -106,7 +106,7 @@ Type: `string`
 
 Options: `_self`, `_blank`, `_parent`, `_top`
 
-Default: `_self`
+Default: `_blank`
 
 If using a link the window target
 
