@@ -40,7 +40,8 @@ Include `dist/pmAnimatedBanners.min.js` above the closing `</body>` tag of the t
 
     conf.map({
       reference: 'stage',
-      link: 'http://www.partnermarketing.com'
+      link: 'http://www.partnermarketing.com',
+      target: '_blank'
     });
 
   };
@@ -98,6 +99,16 @@ Type: `string`
 Default: `null`
 
 Link to open if this shape reference is clicked
+
+#### target
+
+Type: `string`
+
+Options: `_self`, `_blank`, `_parent`, `_top`
+
+Default: `_self`
+
+If using a link the window target
 
 #### onClick
 

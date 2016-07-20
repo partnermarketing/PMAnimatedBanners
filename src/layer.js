@@ -165,8 +165,7 @@ export default class Layer {
 
     // If link is defined change location
     if (this.data.link) {
-      // TODO: Do some testing on the link first, ensure its valid
-      window.location = this.data.link;
+      window.open(this.data.link, this.data.target);
     }
   }
 
@@ -179,8 +178,9 @@ export default class Layer {
     return {
       align: {
         x: 'center',
-        y: 'center',
+        y: 'center'
       },
+      target: '_blank',
       scale: 1,
       width: 0,
       height: 0,
