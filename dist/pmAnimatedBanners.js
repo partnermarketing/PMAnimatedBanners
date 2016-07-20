@@ -334,7 +334,7 @@ var Layer = function () {
       if (this.data.onClick) this.data.onClick.apply(this, this.data);
 
       // If link is defined change location
-      if (this.data.link) {
+      if (!window.editMode && this.data.link) {
         window.open(this.data.link, this.data.target);
       }
     }
