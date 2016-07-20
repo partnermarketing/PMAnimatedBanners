@@ -101,6 +101,8 @@ export default class Loader {
       // Create new layer for entire stage
       const stageLayer = new Layer(data, stage);
       stage.on('click', stageLayer.clicked.bind(stageLayer));
+      // If stage is linked then set cursor pointer
+      if (data.link) stage.on('stagemousemove', () => { cursor.set('pointer'); });
     } else if (shape) {
       // Create new layer
       this.layers.push(new Layer(data, shape));

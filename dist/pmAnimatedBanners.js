@@ -520,6 +520,10 @@ var Loader = function () {
         // Create new layer for entire stage
         var stageLayer = new _layer2.default(data, stage);
         stage.on('click', stageLayer.clicked.bind(stageLayer));
+        // If stage is linked then set cursor pointer
+        if (data.link) stage.on('stagemousemove', function () {
+          _cursor2.default.set('pointer');
+        });
       } else if (shape) {
         // Create new layer
         this.layers.push(new _layer2.default(data, shape));
