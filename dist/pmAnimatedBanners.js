@@ -334,9 +334,8 @@ var Layer = function () {
       if (this.data.onClick) this.data.onClick.apply(this, this.data);
 
       // If link is defined change location
-      if (this.data.link) {
-        // TODO: Do some testing on the link first, ensure its valid
-        window.location = this.data.link;
+      if (!window.editMode && this.data.link) {
+        window.open(this.data.link, this.data.target);
       }
     }
 
@@ -354,6 +353,7 @@ var Layer = function () {
           x: 'center',
           y: 'center'
         },
+        target: '_blank',
         scale: 1,
         width: 0,
         height: 0,
