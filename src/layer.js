@@ -50,6 +50,8 @@ export default class Layer {
   render() {
     // If rendering an image
     if (this.data.image) {
+      // Clear shape
+      this.shape.removeAllChildren();
       // Create bitmap via createjs api
       const bitmap = this.shape.addChild(new createjs.Bitmap(this.imageEl));
 
