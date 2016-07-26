@@ -210,10 +210,10 @@ var Layer = function () {
         // Clear shape
         this.shape.removeAllChildren();
         // Create bitmap via createjs api
-        var bitmap = this.shape.addChild(new createjs.Bitmap(this.imageEl));
+        var bitmap = this.shape.addChild(new createjs.Bitmap(this.optimiseImageToCanvas()));
 
         // Transform image for scale and position
-        bitmap.setTransform(this.data.pos.x, this.data.pos.y, this.data.scale, this.data.scale);
+        bitmap.setTransform(this.data.pos.x, this.data.pos.y, 1, 1);
 
         // If rendering text
       } else if (this.data.text) {
@@ -223,6 +223,48 @@ var Layer = function () {
 
       // Update canvas
       stage.update();
+    }
+  }, {
+    key: 'optimiseImageToCanvas',
+    value: function optimiseImageToCanvas() {
+      // Setup options
+      var blur = 2;
+
+      // Setup canvas
+      var canvas = document.createElement('canvas');
+      var context = canvas.getContext('2d');
+      var _canvas = document.createElement('canvas');
+      var _context = _canvas.getContext('2d');
+      canvas.width = _canvas.width = this.imageEl.width;
+      canvas.height = _canvas.height = this.imageEl.height;
+      context.drawImage(this.imageEl, 0, 0);
+
+      // Calculate ratio
+      var ratio = void 0;
+      if (this.data.width / canvas.width < this.data.height / canvas.height) {
+        ratio = this.data.width / canvas.width;
+      } else {
+        ratio = this.data.height / canvas.height;
+      }
+
+      // Render image to canvas
+      _context.drawImage(canvas, 0, 0, canvas.width, canvas.height, 0, 0, canvas.width, canvas.height);
+
+      // Start duplicating image between canvas while shrinking by blur
+      for (var i = 1; i <= blur; i++) {
+        // Reset original canvas
+        canvas.width = this.imageEl.width * (ratio * blur) / i;
+        canvas.height = this.imageEl.height * (ratio * blur) / i;
+        context.drawImage(_canvas, 0, 0, _canvas.width, _canvas.height, 0, 0, canvas.width, canvas.height);
+
+        // Scale down duplicate
+        _canvas.width = this.imageEl.width * (ratio * blur) / i;
+        _canvas.height = this.imageEl.height * (ratio * blur) / i;
+        _context.drawImage(canvas, 0, 0, canvas.width, canvas.height, 0, 0, _canvas.width, _canvas.height);
+      }
+
+      // Return optimised canvas
+      return canvas;
     }
 
     /**
