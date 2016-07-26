@@ -207,6 +207,8 @@ var Layer = function () {
     value: function render() {
       // If rendering an image
       if (this.data.image) {
+        // Clear shape
+        this.shape.removeAllChildren();
         // Create bitmap via createjs api
         var bitmap = this.shape.addChild(new createjs.Bitmap(this.imageEl));
 
