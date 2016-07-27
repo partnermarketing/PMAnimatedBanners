@@ -51,7 +51,8 @@ export default class Layer {
     // If rendering an image
     if (this.data.image) {
       // Clear shape
-      this.shape.removeAllChildren();
+      this.hidePlaceholders();
+
       // Create bitmap via createjs api
       const bitmap = this.shape.addChild(new createjs.Bitmap(this.optimiseImageToCanvas()));
 
@@ -68,6 +69,21 @@ export default class Layer {
     stage.update();
   }
 
+  /**
+   * Method for hiding placeholders from the current layer, will locate
+   * any animate symbol with a reference starting _pm_placeholder_
+   *
+   * @return {Void}
+   */
+  hidePlaceholders() {
+    // eslint-disable-next-line no-restricted-syntax
+    for (const key in this.shape) {
+      if (key.indexOf('_pm_placeholder_') === 0) {
+        this.shape[key].visible = false;
+        this.shape[key].alpha = 0;
+      }
+    }
+  }
 
   optimiseImageToCanvas() {
     // Setup options
