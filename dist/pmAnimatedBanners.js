@@ -7187,6 +7187,7 @@ var Layer = function () {
 
       // Create image element
       this.imageEl = new Image();
+      this.imageEl.crossOrigin = 'Anonymous';
       this.imageEl.src = this.data.image;
 
       // Create and return promise
