@@ -7185,50 +7185,87 @@ var Layer = function () {
     value: function calculateSize() {
       var _this3 = this;
 
-      // Create image element
-      this.imageEl = new Image();
-      this.imageEl.crossOrigin = 'Anonymous';
-      this.imageEl.src = this.data.image;
-
-      // Create and return promise
-      return new Promise(function (resolve) {
-        // Load image
-        _this3.imageEl.onload = function () {
-          // Calculate image dimensions
-          var width = _this3.data._orig.width = _this3.imageEl.width;
-          var height = _this3.data._orig.height = _this3.imageEl.height;
-
-          // Calculate container dimensions
-          var bounds = _this3.shape.nominalBounds;
-          var container = _this3.data._container;
-          var cWidth = container.width = bounds ? bounds.width : _this3.shape.getBounds().width;
-          var cHeight = container.height = bounds ? bounds.height : _this3.shape.getBounds().height;
-
-          // Calculate scale
-          var scale = void 0;
-          if (cWidth >= cHeight) {
-            _this3.data.scale = scale = 100 / width * cWidth / 100;
-          } else {
-            _this3.data.scale = scale = 100 / height * cHeight / 100;
-          }
-
-          // Calculate new image dimensions
-          _this3.data.width = width * scale;
-          _this3.data.height = height * scale;
-
-          if (_this3.data.width > cWidth) {
-            _this3.data.scale = scale = 100 / width * cWidth / 100;
-          }
-          if (_this3.data.height > cHeight) {
-            _this3.data.scale = scale = 100 / height * cHeight / 100;
-          }
-
-          // Calculate new image dimensions
-          _this3.data.width = width * scale;
-          _this3.data.height = height * scale;
-
-          resolve(scale);
+      var img = new Image();
+      img.crossOrigin = 'Anonymous';
+      return new Promise(function (resolve, reject) {
+        img.onerror = function (err) {
+          return reject(err);
         };
+        img.onload = function () {
+          return resolve(img);
+        };
+        img.src = _this3.data.image;
+        if (img.complete || typeof img.complete === 'undefined') {
+          img.src = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==';
+          img.src = _this3.data.image;
+        }
+      }).then(function (loadedImage) {
+        var canvas = document.createElement('CANVAS');
+        var ctx = canvas.getContext('2d');
+        ctx.drawImage(loadedImage, 0, 0);
+
+        var drawnImage = new Image();
+        canvas.width = loadedImage.width;
+        canvas.height = loadedImage.height;
+
+        drawnImage.src = canvas.toDataURL();
+        canvas = null;
+
+        var promiseResult = void 0;
+        if (drawnImage.complete || typeof drawnImage.complete === 'undefined') {
+          promiseResult = new Promise(function (resolve) {
+            return resolve(drawnImage);
+          });
+        } else {
+          promiseResult = new Promise(function (resolve, reject) {
+            drawnImage.onerror = function (err) {
+              return reject(err);
+            };
+            drawnImage.onload = function () {
+              return resolve(drawnImage);
+            };
+          });
+        }
+        return promiseResult;
+      }).then(function (loadedBase64Image) {
+        // Calculate image dimensions
+        _this3.imageEl = loadedBase64Image;
+
+        var width = _this3.data._orig.width = _this3.imageEl.width;
+        var height = _this3.data._orig.height = _this3.imageEl.height;
+
+        // Calculate container dimensions
+        var bounds = _this3.shape.nominalBounds;
+        var container = _this3.data._container;
+        var cWidth = container.width = bounds ? bounds.width : _this3.shape.getBounds().width;
+        var cHeight = container.height = bounds ? bounds.height : _this3.shape.getBounds().height;
+
+        // Calculate scale
+        var scale = void 0;
+        if (cWidth >= cHeight) {
+          _this3.data.scale = scale = 100 / width * cWidth / 100;
+        } else {
+          _this3.data.scale = scale = 100 / height * cHeight / 100;
+        }
+
+        // Calculate new image dimensions
+        _this3.data.width = width * scale;
+        _this3.data.height = height * scale;
+
+        if (_this3.data.width > cWidth) {
+          _this3.data.scale = scale = 100 / width * cWidth / 100;
+        }
+        if (_this3.data.height > cHeight) {
+          _this3.data.scale = scale = 100 / height * cHeight / 100;
+        }
+
+        // Calculate new image dimensions
+        _this3.data.width = width * scale;
+        _this3.data.height = height * scale;
+
+        return new Promise(function (resolve) {
+          return resolve(scale);
+        });
       });
     }
 

@@ -179,6 +179,9 @@ export default class Layer {
       }
       return promiseResult;
     })
+    .catch(error => {
+      throw new Error(error);
+    })
     .then(loadedBase64Image => {
       // Calculate image dimensions
       this.imageEl = loadedBase64Image;
@@ -216,6 +219,9 @@ export default class Layer {
       this.data.height = height * scale;
 
       return new Promise(resolve => resolve(scale));
+    })
+    .catch(error => {
+      throw new Error(error);
     });
   }
 
