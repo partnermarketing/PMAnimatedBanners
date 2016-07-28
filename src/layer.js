@@ -158,12 +158,13 @@ export default class Layer {
     }))
     .then(loadedImage => {
       let canvas = document.createElement('CANVAS');
+      canvas.width = loadedImage.width;
+      canvas.height = loadedImage.height;
+
       const ctx = canvas.getContext('2d');
       ctx.drawImage(loadedImage, 0, 0);
 
       const drawnImage = new Image();
-      canvas.width = loadedImage.width;
-      canvas.height = loadedImage.height;
 
       drawnImage.src = canvas.toDataURL();
       canvas = null;
