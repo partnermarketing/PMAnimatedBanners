@@ -145,7 +145,6 @@ export default class Layer {
    * @return {Promise} [will resolve once image src has been retrieved and dimensions calculated]
    */
   calculateSize() {
-    // var _this = this;
     const img = new Image();
     img.crossOrigin = 'Anonymous';
     return (new Promise((resolve, reject) => {
@@ -160,15 +159,30 @@ export default class Layer {
     .then(loadedImage => {
       let canvas = document.createElement('CANVAS');
       const ctx = canvas.getContext('2d');
-      canvas.height = loadedImage.height;
-      canvas.width = loadedImage.width;
       ctx.drawImage(loadedImage, 0, 0);
 
-      this.imageEl = new Image();
-      this.imageEl.src = canvas.toDataURL();
+      const drawnImage = new Image();
+      canvas.width = loadedImage.width;
+      canvas.height = loadedImage.height;
+
+      drawnImage.src = canvas.toDataURL();
       canvas = null;
 
+      let promiseResult;
+      if (drawnImage.complete || typeof drawnImage.complete === 'undefined') {
+        promiseResult = new Promise(resolve => resolve(drawnImage));
+      } else {
+        promiseResult = new Promise((resolve, reject) => {
+          drawnImage.onerror = err => reject(err);
+          drawnImage.onload = () => resolve(drawnImage);
+        });
+      }
+      return promiseResult;
+    })
+    .then(loadedBase64Image => {
       // Calculate image dimensions
+      this.imageEl = loadedBase64Image;
+
       const width = this.data._orig.width = this.imageEl.width;
       const height = this.data._orig.height = this.imageEl.height;
 
