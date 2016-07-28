@@ -145,50 +145,83 @@ export default class Layer {
    * @return {Promise} [will resolve once image src has been retrieved and dimensions calculated]
    */
   calculateSize() {
-    // Create image element
-    this.imageEl = new Image();
-    this.imageEl.crossOrigin = 'Anonymous';
-    this.imageEl.src = this.data.image;
+    const img = new Image();
+    img.crossOrigin = 'Anonymous';
+    return (new Promise((resolve, reject) => {
+      img.onerror = err => reject(err);
+      img.onload = () => resolve(img);
+      img.src = this.data.image;
+      if (img.complete || typeof img.complete === 'undefined') {
+        img.src = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==';
+        img.src = this.data.image;
+      }
+    }))
+    .then(loadedImage => {
+      let canvas = document.createElement('CANVAS');
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(loadedImage, 0, 0);
 
-    // Create and return promise
-    return new Promise(resolve => {
-      // Load image
-      this.imageEl.onload = () => {
-        // Calculate image dimensions
-        const width = this.data._orig.width = this.imageEl.width;
-        const height = this.data._orig.height = this.imageEl.height;
+      const drawnImage = new Image();
+      canvas.width = loadedImage.width;
+      canvas.height = loadedImage.height;
 
-        // Calculate container dimensions
-        const bounds = this.shape.nominalBounds;
-        const container = this.data._container;
-        const cWidth = container.width = bounds ? bounds.width : this.shape.getBounds().width;
-        const cHeight = container.height = bounds ? bounds.height : this.shape.getBounds().height;
+      drawnImage.src = canvas.toDataURL();
+      canvas = null;
 
-        // Calculate scale
-        let scale;
-        if (cWidth >= cHeight) {
-          this.data.scale = scale = ((100 / width) * cWidth) / 100;
-        } else {
-          this.data.scale = scale = ((100 / height) * cHeight) / 100;
-        }
+      let promiseResult;
+      if (drawnImage.complete || typeof drawnImage.complete === 'undefined') {
+        promiseResult = new Promise(resolve => resolve(drawnImage));
+      } else {
+        promiseResult = new Promise((resolve, reject) => {
+          drawnImage.onerror = err => reject(err);
+          drawnImage.onload = () => resolve(drawnImage);
+        });
+      }
+      return promiseResult;
+    })
+    .catch(error => {
+      throw new Error(error);
+    })
+    .then(loadedBase64Image => {
+      // Calculate image dimensions
+      this.imageEl = loadedBase64Image;
 
-        // Calculate new image dimensions
-        this.data.width = width * scale;
-        this.data.height = height * scale;
+      const width = this.data._orig.width = this.imageEl.width;
+      const height = this.data._orig.height = this.imageEl.height;
 
-        if (this.data.width > cWidth) {
-          this.data.scale = scale = ((100 / width) * cWidth) / 100;
-        }
-        if (this.data.height > cHeight) {
-          this.data.scale = scale = ((100 / height) * cHeight) / 100;
-        }
+      // Calculate container dimensions
+      const bounds = this.shape.nominalBounds;
+      const container = this.data._container;
+      const cWidth = container.width = bounds ? bounds.width : this.shape.getBounds().width;
+      const cHeight = container.height = bounds ? bounds.height : this.shape.getBounds().height;
 
-        // Calculate new image dimensions
-        this.data.width = width * scale;
-        this.data.height = height * scale;
+      // Calculate scale
+      let scale;
+      if (cWidth >= cHeight) {
+        this.data.scale = scale = ((100 / width) * cWidth) / 100;
+      } else {
+        this.data.scale = scale = ((100 / height) * cHeight) / 100;
+      }
 
-        resolve(scale);
-      };
+      // Calculate new image dimensions
+      this.data.width = width * scale;
+      this.data.height = height * scale;
+
+      if (this.data.width > cWidth) {
+        this.data.scale = scale = ((100 / width) * cWidth) / 100;
+      }
+      if (this.data.height > cHeight) {
+        this.data.scale = scale = ((100 / height) * cHeight) / 100;
+      }
+
+      // Calculate new image dimensions
+      this.data.width = width * scale;
+      this.data.height = height * scale;
+
+      return new Promise(resolve => resolve(scale));
+    })
+    .catch(error => {
+      throw new Error(error);
     });
   }
 
