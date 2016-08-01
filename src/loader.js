@@ -21,9 +21,6 @@ export default class Loader {
       stage.enableMouseOver();
       stage.useHandCursor = false;
 
-      // Setup image manifest
-      this.setupManifest();
-
       // Bind stage click events
       this.bindEvents();
     }
@@ -69,20 +66,6 @@ export default class Loader {
       // Fire the layers click method
       clickedLayers.forEach(layer => layer.clicked());
     });
-  }
-
-  /**
-   * Setup manifest method, used to modify the exported Animate CC manifest
-   * to include crossOrigin attributes for images
-   *
-   * @return {Void} void
-   */
-  setupManifest() {
-    if (window.lib && window.lib.properties && window.lib.properties.manifest) {
-      for (const image of lib.properties.manifest) {
-        image.crossOrigin = 'Anonymous';
-      }
-    }
   }
 
   /**

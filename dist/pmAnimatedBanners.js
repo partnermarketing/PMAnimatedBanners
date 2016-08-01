@@ -7013,6 +7013,34 @@ var interval = setInterval(function () {
   }
 }, 1);
 
+// Setup manifest for handling cross origin images
+if (window.lib && window.lib.properties && window.lib.properties.manifest) {
+  var _iteratorNormalCompletion = true;
+  var _didIteratorError = false;
+  var _iteratorError = undefined;
+
+  try {
+    for (var _iterator = lib.properties.manifest[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+      var image = _step.value;
+
+      image.crossOrigin = 'Anonymous';
+    }
+  } catch (err) {
+    _didIteratorError = true;
+    _iteratorError = err;
+  } finally {
+    try {
+      if (!_iteratorNormalCompletion && _iterator.return) {
+        _iterator.return();
+      }
+    } finally {
+      if (_didIteratorError) {
+        throw _iteratorError;
+      }
+    }
+  }
+}
+
 },{"./data":300,"./loader":303,"babel-polyfill":1}],302:[function(require,module,exports){
 'use strict';
 
@@ -7417,9 +7445,6 @@ var Loader = function () {
       stage.enableMouseOver();
       stage.useHandCursor = false;
 
-      // Setup image manifest
-      this.setupManifest();
-
       // Bind stage click events
       this.bindEvents();
     }
@@ -7473,44 +7498,6 @@ var Loader = function () {
           return layer.clicked();
         });
       });
-    }
-
-    /**
-     * Setup manifest method, used to modify the exported Animate CC manifest
-     * to include crossOrigin attributes for images
-     *
-     * @return {Void} void
-     */
-
-  }, {
-    key: 'setupManifest',
-    value: function setupManifest() {
-      if (window.lib && window.lib.properties && window.lib.properties.manifest) {
-        var _iteratorNormalCompletion = true;
-        var _didIteratorError = false;
-        var _iteratorError = undefined;
-
-        try {
-          for (var _iterator = lib.properties.manifest[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-            var image = _step.value;
-
-            image.crossOrigin = 'Anonymous';
-          }
-        } catch (err) {
-          _didIteratorError = true;
-          _iteratorError = err;
-        } finally {
-          try {
-            if (!_iteratorNormalCompletion && _iterator.return) {
-              _iterator.return();
-            }
-          } finally {
-            if (_didIteratorError) {
-              throw _iteratorError;
-            }
-          }
-        }
-      }
     }
 
     /**
