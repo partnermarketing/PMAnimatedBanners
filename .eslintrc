@@ -10,7 +10,8 @@
     "createjs": true,
     "stage": true,
     "sendCampaignInstanceTrackingEvent": true,
-    "templateData": true
+    "templateData": true,
+    "lib": true
   },
   "rules": {
     "no-underscore-dangle": 0
