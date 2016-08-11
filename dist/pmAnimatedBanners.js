@@ -7222,7 +7222,7 @@ var Layer = function () {
         img.onload = function () {
           return resolve(img);
         };
-        img.src = _this3.data.image;
+        img.src = _this3.data.image + '?' + new Date().getTime();
         if (img.complete || typeof img.complete === 'undefined') {
           img.src = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==';
           img.src = _this3.data.image;
