@@ -150,7 +150,7 @@ export default class Layer {
     return (new Promise((resolve, reject) => {
       img.onerror = err => reject(err);
       img.onload = () => resolve(img);
-      img.src = this.data.image;
+      img.src = `${this.data.image}?${(new Date()).getTime()}`;
       if (img.complete || typeof img.complete === 'undefined') {
         img.src = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==';
         img.src = this.data.image;
