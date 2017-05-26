@@ -17,6 +17,9 @@ export default class Layer {
     const data = Object.assign(this._defaultData, _data);
     Object.assign(this, { shape, data });
 
+    // Clear shape
+    this.hidePlaceholders();
+
     // Calculate dimensions, position and render
     this.calculate().then(() => this.render());
   }
@@ -50,9 +53,6 @@ export default class Layer {
   render() {
     // If rendering an image
     if (this.data.image) {
-      // Clear shape
-      this.hidePlaceholders();
-
       // Create bitmap via createjs api
       const bitmap = this.shape.addChild(new createjs.Bitmap(this.optimiseImageToCanvas()));
 
