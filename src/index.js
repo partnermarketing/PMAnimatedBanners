@@ -5,8 +5,10 @@ import {} from './data';
 const interval = setInterval(() => {
   if (typeof stage !== 'undefined') {
     // eslint-disable-next-line no-unused-vars
-    const loader = new Loader();
-    clearInterval(interval);
+    try {
+      const loader = new Loader();
+      clearInterval(interval);
+    } catch (e) {}
   }
 }, 1);
 
