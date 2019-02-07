@@ -106,6 +106,8 @@ export default class Loader {
     } else if (shape) {
       // Create new layer
       this.layers.push(new Layer(data, shape));
+    } else {
+      throw new Error('Mapped element not loaded yet');
     }
   }
 
